@@ -1,0 +1,46 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  max-height: 8vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+
+
+.FreeformMap {
+  flex-grow: 1;
+  order:1;
+  position: relative;
+  overflow: hidden;
+  background:teal;
+  min-width: 80%;
+  max-width: 100%;
+    
+}
+
+
+.OptionBar {
+  background:black;
+  order: 2;
+  min-width: 250px;
+  overflow:hidden;
+  max-width: 20%;
+}
+
+.Containment {
+  display: flex;
+  overflow: hidden;
+  flex-direction: row;
+  position: relative;
+  background-color: red;
+  min-height: 92vh;
+  width: 100vw;
+}
