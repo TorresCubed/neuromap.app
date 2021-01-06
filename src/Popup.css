@@ -1,3 +1,6 @@
+
+/* Style for Idea Add box */
+
 .popup {
     position: fixed;
     width:100%;
@@ -8,26 +11,74 @@
     bottom:0;
     margin: auto;
     background-color: rgba(0,0,0,0.5);
+    z-index: 2;
 }
 
 .popup.hidden {
     display:none;
 }
 
-
 .popupInner {
     position:absolute;
     left:35%;
-    right: 35%;
     top: 35%;
-    bottom: 45%;
+    max-width: 250px;
+    min-width: 200px;
+    min-height: 210px;
+    overflow: hidden;
     margin: auto;
     border-radius: 20px;
     background: white;
 }
 
 
+.popupHeader {
+    font-size: 30px;
+}
+
+/* Style for Idea Edit box */
+
+.editHeader {
+    font-size:22px;
+}
+
+.editWrapper {
+    position: fixed;
+    width:100%;
+    height: 100%;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    margin: auto;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+}
+
+.edit {
+    position:absolute;
+    left:35%;
+    top: 35%;
+    max-width: 250px;
+    min-width: 200px;
+    min-height: 210px;
+    overflow: hidden;
+    margin: auto;
+    border-radius: 20px;
+    background: white;
+    border: black;
+}
+
+.editWrapper.hidden {
+    display:none;
+}
+
+
+
+/* Generic Popup Style */
 
 .submitButton {
     margin: 10px;
 }
+
+

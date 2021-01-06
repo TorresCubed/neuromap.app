@@ -14,9 +14,9 @@ const Popup = ({show, onClose, onSubmit}) => {
     }, [value, onSubmit, onClose]);
 
     return(
-        <div className={'popup' + (show ? '' : ' hidden')} id="myPopUp" >
-            <div className='popupInner'>
-                <h1>Add an Idea</h1>
+        <div className={"popup" + (show ? "" : " hidden")} id="myPopUp" >
+            <div className="popupInner">
+                <h1 className="popupHeader">Add an Idea</h1>
                 <form onSubmit={handleSubmit}>
                     <label>Enter Idea:</label><br/>
                     <input type="text" value={value} onChange={handleChange} /><br/>

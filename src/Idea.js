@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useDrag } from 'react-dnd';
 import { ItemTypes } from './ItemTypes';
 
@@ -13,17 +13,28 @@ const style = {
 
 
 
-export const Idea = ({id,left,top,hideSourceOnDrag,children, }) => {
+export const Idea = ({id,left,top,hideSourceOnDrag,children,displayEdit }) => {
     const [{ isDragging }, drag] = useDrag({
         item: { id, left, top, type: ItemTypes.IDEA},
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
     });
+    
+    
+
+    const handleClick = useCallback((e) => {
+        e.preventDefault();
+        displayEdit(id);
+    }, [displayEdit, id]);
+
+
+
+
     if(isDragging && hideSourceOnDrag) {
         return <div ref={drag}/>;
     }
-    return (<div ref={drag} style={{...style, left, top}}>
+    return (<div ref={drag} style={{...style, left, top}} onDoubleClick={handleClick}>
         {children}
     </div>);
 };
