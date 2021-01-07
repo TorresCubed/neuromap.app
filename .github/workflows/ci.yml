@@ -16,16 +16,21 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  prettier:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        # Make sure the actual branch is checked out when running on pull requests
+        ref: ${{ github.head_ref }}
+        # This is important to fetch the changes to the previous commit
+        fetch-depth: 0
 
-      - name: Prettier Action
-        # You may pin to the exact commit or the version.
-        # uses: creyD/prettier_action@bb361e2979cff283ca7684908deac8f95400e779
-        uses: creyD/prettier_action@v3.2
+    - name: Prettify code
+      uses: creyD/prettier_action@v3.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
