@@ -13,7 +13,8 @@ const style = {
 
 
 
-export const Idea = ({id,left,top,hideSourceOnDrag,children,displayEdit }) => {
+export const Idea = ({id,left,top,children,onEdit }) => {
+    const hideSourceOnDrag = true;
     const [{ isDragging }, drag] = useDrag({
         item: { id, left, top, type: ItemTypes.IDEA},
         collect: (monitor) => ({
@@ -22,11 +23,10 @@ export const Idea = ({id,left,top,hideSourceOnDrag,children,displayEdit }) => {
     });
     
     
-
-    const handleClick = useCallback((e) => {
+    const handleDoubleClick = useCallback((e) => {
         e.preventDefault();
-        displayEdit(id);
-    }, [displayEdit, id]);
+        onEdit(id);
+    }, [onEdit, id]);
 
 
 
@@ -34,7 +34,9 @@ export const Idea = ({id,left,top,hideSourceOnDrag,children,displayEdit }) => {
     if(isDragging && hideSourceOnDrag) {
         return <div ref={drag}/>;
     }
-    return (<div ref={drag} style={{...style, left, top}} onDoubleClick={handleClick}>
+    return (
+    <div ref={drag} style={{...style, left, top}} onDoubleClick={handleDoubleClick} >
         {children}
     </div>);
 };
+

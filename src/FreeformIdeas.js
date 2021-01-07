@@ -4,27 +4,31 @@ import { Idea } from './Idea';
 import { ItemTypes } from './ItemTypes';
 import update from 'immutability-helper';
 import { v4 as uuidv4 } from 'uuid';
-import Popup from './AddPopup';
-import EditPopup from './EditPopup';
+import Popup from './Popup';
 
 
-const FreeForm = ({ hideSourceOnDrag }) => {
+const FreeForm = () => {
+    const hideSourceOnDrag = true;
     const [ideas, setIdeas] = useState({
-        a: { top: 20, left: 80, title: 'Great Idea!'},
-        b: { top: 180, left: 20, title: 'Here is an Example to get you started'},
+        a: { top: 20, left: 80, title: 'Here is an Example to get you Started'},
+        b: { top: 180, left: 20, title: 'Great Idea!'},
     });
     const [coords, setCoords] = useState([0, 0]);
     const [popupShow, setPopupShow] = useState(false);
-    const showPopup = useCallback(() => setPopupShow(true), [])
+    const showPopup = useCallback(() => {
+        setPopupShow(true)
+        setFormType(true);
+    }, [])
     const hidePopup = useCallback(() => setPopupShow(false), [])
 
     const [storedID, setStoredID] = useState("");
-    const [editShow, setEdit] = useState(false);
+    const [formType, setFormType] = useState(true)
+
     const showEdit = useCallback((id) => {
         setStoredID(id);
-        setEdit(true)
-    }, [])
-    const hideEdit = useCallback(() => setEdit(false), [])
+        showPopup(true);
+        setFormType(false)
+    }, [showPopup])
 
     const [, drop] = useDrop({
         accept: ItemTypes.IDEA,
@@ -44,11 +48,13 @@ const FreeForm = ({ hideSourceOnDrag }) => {
         }));
     };
     const editIdea = useCallback((title) => {
-        setIdeas(update(ideas, {
-            [storedID]:{
-                $merge:{title},
-            },
-        }));
+        if(title !=null){
+            setIdeas(update(ideas, {
+                [storedID]:{
+                    $merge:{title},
+                },
+            }))
+        };
     }, [ideas, storedID]);
     const addIdea = useCallback((title) => {
         const id = uuidv4()
@@ -59,19 +65,18 @@ const FreeForm = ({ hideSourceOnDrag }) => {
     const handleClick = useCallback((e) => {
         if(e.target.className !== "FreeformMap") return;
         e.preventDefault();
-        setCoords([coords[0] = e.nativeEvent.layerX, coords[1] = e.nativeEvent.layerY]);
+        setCoords([e.nativeEvent.layerX,e.nativeEvent.layerY]);
         setTimeout(showPopup,300);
-    }, [coords, showPopup]);
+    }, [showPopup]);
 
     return (
-        <div ref={drop} onDoubleClick={handleClick} className='FreeformMap'>
-            <Popup show={popupShow} onClose={hidePopup} onSubmit={addIdea} />
-            <EditPopup   closeEdit={hideEdit} show={editShow} onSubmit={editIdea}/>
+        <div ref={drop} onDoubleClick={handleClick} className="FreeformMap">
+            <Popup show={popupShow} onClose={hidePopup} onSubmit={formType ? addIdea : editIdea} formType={formType}/>
             {
                 Object.keys(ideas).map((key) => {
                     const { left, top, title } = ideas[key];
                     return (
-                        <Idea key={key} id = {key} left = {left} top = {top} hideSourceOnDrag={hideSourceOnDrag} displayEdit={showEdit} >
+                        <Idea key={key} id = {key} left = {left} top = {top} hideSourceOnDrag={hideSourceOnDrag} onEdit={showEdit} >
                             {title}
                         </Idea>
                     );
