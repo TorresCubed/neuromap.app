@@ -1,3 +1,3 @@
 export const ItemTypes = {
-    IDEA: 'idea',
-}
+  IDEA: "idea",
+};

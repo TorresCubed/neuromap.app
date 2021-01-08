@@ -1,16 +1,7 @@
-import React from 'react';
-
-
-
-
+import React from "react";
 
 function Options() {
-  return (
-    <div className="OptionBar">
-
-    </div>
-  )
+  return <div className="OptionBar"></div>;
 }
-
 
 export default Options;
