@@ -4,32 +4,46 @@ import { Idea } from "./Idea";
 import { ItemTypes } from "./ItemTypes";
 import update from "immutability-helper";
 import { v4 as uuidv4 } from "uuid";
-import Popup from "./Popup";
+import Modal from "./Modal";
+import Forms from "./Forms";
 
 const FreeForm = () => {
-  const hideSourceOnDrag = true;
   const [ideas, setIdeas] = useState({
     a: { top: 20, left: 80, title: "Here is an Example to get you Started" },
     b: { top: 180, left: 20, title: "Great Idea!" },
   });
   const [coords, setCoords] = useState([0, 0]);
-  const [popupShow, setPopupShow] = useState(false);
-  const showPopup = useCallback(() => {
-    setPopupShow(true);
-    setFormType(true);
-  }, []);
-  const hidePopup = useCallback(() => setPopupShow(false), []);
+  const [showAddModal, setAddModal] = useState(false);
+  const [showEditModal, setEditModal] = useState(false);
+
+  const showAdd = useCallback(() => setAddModal(true), []);
+  const hideAdd = useCallback(
+    (e) => {
+      e.preventDefault();
+      setAddModal(false);
+    }, 
+    []
+  );
+
+  const showEdit = useCallback(() => setEditModal(true), []);
+  const hideEdit = useCallback(
+    (e) => {
+      e.preventDefault();
+      setEditModal(false);
+    },
+    []
+  );
 
   const [storedID, setStoredID] = useState("");
-  const [formType, setFormType] = useState(true);
+  const [ideaContent, setIdeaContent] = useState("");
 
-  const showEdit = useCallback(
-    (id) => {
+  const showEditor = useCallback(
+    (id,children) => {
       setStoredID(id);
-      showPopup(true);
-      setFormType(false);
+      setIdeaContent(children);
+      showEdit(true);
     },
-    [showPopup]
+    [showEdit]
   );
 
   const [, drop] = useDrop({
@@ -79,19 +93,36 @@ const FreeForm = () => {
       if (e.target.className !== "FreeformMap") return;
       e.preventDefault();
       setCoords([e.nativeEvent.layerX, e.nativeEvent.layerY]);
-      setTimeout(showPopup, 300);
+      setIdeaContent("");
+      setTimeout(showAdd, 300);
     },
-    [showPopup]
+    [showAdd]
   );
 
   return (
     <div ref={drop} onDoubleClick={handleClick} className="FreeformMap">
-      <Popup
-        show={popupShow}
-        onClose={hidePopup}
-        onSubmit={formType ? addIdea : editIdea}
-        formType={formType}
-      />
+      <Modal
+        show={showAddModal}
+      >
+        <Forms
+          onClose={hideAdd}
+          onSubmit={addIdea}
+          formType={"addForm"}
+          content={ideaContent}
+          setContent={setIdeaContent}
+        />
+      </Modal>
+      <Modal
+        show={showEditModal}
+      >
+        <Forms
+          onClose={hideEdit}
+          onSubmit={editIdea}
+          formType={"editForm"}
+          content={ideaContent}
+          setContent={setIdeaContent}
+        />
+      </Modal>
       {Object.keys(ideas).map((key) => {
         const { left, top, title } = ideas[key];
         return (
@@ -100,8 +131,7 @@ const FreeForm = () => {
             id={key}
             left={left}
             top={top}
-            hideSourceOnDrag={hideSourceOnDrag}
-            onEdit={showEdit}
+            onEdit={showEditor}
           >
             {title}
           </Idea>

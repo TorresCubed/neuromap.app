@@ -4,7 +4,7 @@ import { ItemTypes } from "./ItemTypes";
 
 const style = {
   position: "absolute",
-  border: "1px dashed gray",
+  border: "1px solid gray",
   overflow: "hidden",
   backgroundColor: "white",
   padding: "0.5rem 1rem",
@@ -12,7 +12,6 @@ const style = {
 };
 
 export const Idea = ({ id, left, top, children, onEdit }) => {
-  const hideSourceOnDrag = true;
   const [{ isDragging }, drag] = useDrag({
     item: { id, left, top, type: ItemTypes.IDEA },
     collect: (monitor) => ({
@@ -21,14 +20,14 @@ export const Idea = ({ id, left, top, children, onEdit }) => {
   });
 
   const handleDoubleClick = useCallback(
-    (e) => {
+    (e) => { 
       e.preventDefault();
-      onEdit(id);
+      onEdit(id,children);
     },
-    [onEdit, id]
+    [onEdit, id, children]
   );
 
-  if (isDragging && hideSourceOnDrag) {
+  if (isDragging) {
     return <div ref={drag} />;
   }
   return (
