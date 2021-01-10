@@ -9,8 +9,8 @@ import Forms from "./Forms";
 
 const FreeForm = () => {
   const [ideas, setIdeas] = useState({
-    a: { top: 20, left: 80, title: "Here is an Example to get you Started" },
-    b: { top: 180, left: 20, title: "Great Idea!" },
+    a: { id: "a", top: 20, left: 80, title: "Here is an Example to get you Started" },
+    b: { id: "b", top: 180, left: 20, title: "Great Idea!" },
   });
   const [coords, setCoords] = useState([0, 0]);
   const [showAddModal, setAddModal] = useState(false);
@@ -45,6 +45,13 @@ const FreeForm = () => {
     },
     [showEdit]
   );
+
+  const onSelect = useCallback((id) => {
+      setStoredID(id);
+      console.log("Currently Selecting " + id);
+    },
+    [setStoredID]
+  )
 
   const [, drop] = useDrop({
     accept: ItemTypes.IDEA,
@@ -123,20 +130,14 @@ const FreeForm = () => {
           setContent={setIdeaContent}
         />
       </Modal>
-      {Object.keys(ideas).map((key) => {
-        const { left, top, title } = ideas[key];
-        return (
-          <Idea
-            key={key}
-            id={key}
-            left={left}
-            top={top}
-            onEdit={showEditor}
-          >
-            {title}
-          </Idea>
-        );
-      })}
+      {Object.entries(ideas).map(([key, idea]) => (
+        <Idea
+          key={key}
+          onEdit={showEditor}
+          onSelect={onSelect}
+          {...idea}
+        />
+      ))}
     </div>
   );
 };

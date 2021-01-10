@@ -1,7 +1,7 @@
 
 /* Style for Idea Add box */
 
-.popup {
+.modal {
     position: fixed;
     display:flex;
     justify-content: center;
@@ -15,11 +15,11 @@
     z-index: 2;
 }
 
-.popup.hidden {
+.modal.hidden {
     display:none;
 }
 
-.popup > div {
+.modal > div {
     width:250px;
     height:210px;
     border-radius: 20px;

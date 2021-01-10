@@ -1,6 +1,8 @@
 import React, { useCallback } from "react";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
+import linker from './linkerIcon.JPG';
+import './Idea.css'
 
 const style = {
   position: "absolute",
@@ -11,20 +13,28 @@ const style = {
   cursor: "move",
 };
 
-export const Idea = ({ id, left, top, children, onEdit }) => {
+export const Idea = ({ id, left, top, title, onEdit, onSelect }) => {
   const [{ isDragging }, drag] = useDrag({
-    item: { id, left, top, type: ItemTypes.IDEA },
+    item: { id, left, top, title, type: ItemTypes.IDEA },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
 
+  const setLinkStart = useCallback(
+    (e) => {
+      e.preventDefault();
+      onSelect(id);
+    },
+    [id, onSelect]
+  );
+
   const handleDoubleClick = useCallback(
     (e) => { 
       e.preventDefault();
-      onEdit(id,children);
+      onEdit(id,title);
     },
-    [onEdit, id, children]
+    [onEdit, id, title]
   );
 
   if (isDragging) {
@@ -35,8 +45,10 @@ export const Idea = ({ id, left, top, children, onEdit }) => {
       ref={drag}
       style={{ ...style, left, top }}
       onDoubleClick={handleDoubleClick}
+      onClick={setLinkStart}
     >
-      {children}
+      <img className="linker" src={linker} alt="link" />
+      {title}
     </div>
   );
 };

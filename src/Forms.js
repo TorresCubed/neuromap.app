@@ -1,4 +1,4 @@
-import React, { useCallback} from "react";
+import React, { useCallback } from "react";
 import "./Forms.css";
 
 const Forms = ({ onClose, onSubmit, formType, content, setContent }) => {
