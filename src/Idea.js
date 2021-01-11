@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
-import linker from './linkerIcon.JPG';
-import './Idea.css'
+import linker from "./linkerIcon.JPG";
+import "./Idea.css";
 
 const style = {
   position: "absolute",
@@ -22,9 +22,9 @@ export const Idea = ({ id, left, top, title, onEdit }) => {
   });
 
   const handleDoubleClick = useCallback(
-    (e) => { 
+    (e) => {
       e.preventDefault();
-      onEdit(id,title);
+      onEdit(id, title);
     },
     [onEdit, id, title]
   );

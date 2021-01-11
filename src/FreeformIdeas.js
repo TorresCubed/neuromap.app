@@ -9,7 +9,12 @@ import IdeaForm from "./IdeaForm";
 
 const FreeForm = () => {
   const [ideas, setIdeas] = useState({
-    a: { id: "a", top: 20, left: 80, title: "Here is an Example to get you Started" },
+    a: {
+      id: "a",
+      top: 20,
+      left: 80,
+      title: "Here is an Example to get you Started",
+    },
     b: { id: "b", top: 180, left: 20, title: "Great Idea!" },
   });
 
@@ -25,11 +30,13 @@ const FreeForm = () => {
       const delta = monitor.getDifferenceFromInitialOffset();
       const left = Math.round(item.left + delta.x);
       const top = Math.round(item.top + delta.y);
-      setIdeas(update(ideas, {
-        [item.id]: {
-          $merge: { left, top },
-        },
-      }));
+      setIdeas(
+        update(ideas, {
+          [item.id]: {
+            $merge: { left, top },
+          },
+        })
+      );
     },
   });
 
@@ -45,7 +52,11 @@ const FreeForm = () => {
     (e) => {
       if (e.target.className !== "FreeformMap") return;
       e.preventDefault();
-      setSelectedIdea({top: e.nativeEvent.layerY, left: e.nativeEvent.layerX, title: ""});
+      setSelectedIdea({
+        top: e.nativeEvent.layerY,
+        left: e.nativeEvent.layerX,
+        title: "",
+      });
       setTimeout(ideaModalShow, 300);
     },
     [ideaModalShow]
@@ -53,7 +64,7 @@ const FreeForm = () => {
 
   const handleIdeaChange = useCallback(
     (idea) => {
-      if (!idea.id) idea = update(idea, {id: {$set: uuidv4()}});
+      if (!idea.id) idea = update(idea, { id: { $set: uuidv4() } });
       const { id, title } = idea;
       if (title === "") return;
       setIdeas(
@@ -70,19 +81,13 @@ const FreeForm = () => {
 
   return (
     <div ref={drop} onDoubleClick={handleDoubleClick} className="FreeformMap">
-      {showIdeaModal &&
+      {showIdeaModal && (
         <Modal onClose={ideaModalHide}>
-          <IdeaForm
-            onSubmit={handleIdeaChange}
-            idea={selectedIdea}
-          />
-        </Modal>}
+          <IdeaForm onSubmit={handleIdeaChange} idea={selectedIdea} />
+        </Modal>
+      )}
       {Object.entries(ideas).map(([key, idea]) => (
-        <Idea
-          key={key}
-          onEdit={editIdea}
-          {...idea}
-        />
+        <Idea key={key} onEdit={editIdea} {...idea} />
       ))}
     </div>
   );
