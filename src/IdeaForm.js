@@ -1,57 +1,57 @@
-import React, { useCallback } from "react";
-import "./Forms.css";
+import React, { useCallback, useState } from "react";
+import update from "immutability-helper";
+import "./IdeaForm.css";
 
-const Forms = ({ onClose, onSubmit, formType, content, setContent }) => {
+const IdeaForm = ({ onSubmit, idea }) => {
+  const [ideaState, setIdeaState] = useState(idea);
 
-  const handleChange = useCallback((event) => setContent(event.target.value), [setContent]);
+  const handleChange = useCallback(
+    (event) => setIdeaState(update(ideaState, {title: {$set: event.target.value}})),
+    [ideaState]
+  );
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      onSubmit(content);
-      onClose(e);
+      onSubmit(ideaState);
     },
-    [onSubmit, onClose, content]
+    [onSubmit, ideaState]
   );
 
-
-  
   const entries = { 
     addForm: { 
       header: "Add an Idea", 
-      label: "Enter Idea:", 
-      submition: handleSubmit,
+      label: "Enter Idea:",
       button: "Add"
     },
     editForm: {
       header: "Would you like to change your Idea?",
       label: "New Idea:",
-      submition: handleSubmit,
       button: "Change"
     }
   };
+
+  const formType = ideaState.id ? "editForm" : "addForm";
   
   return (
     <div className="form" >
       <h1>
         {entries[formType].header}
       </h1>
-      <form onSubmit={entries[formType].submition}>
+      <form onSubmit={handleSubmit}>
         <div>
           <label>{entries[formType].label}</label>
         </div>
         <div>
-          <input type="text" value={content} onChange={handleChange} />
+          <input type="text" value={ideaState.title} onChange={handleChange} />
         </div>
         <div>
           <input className="submitButton" type="submit" value={entries[formType].button} />
         </div>
-      <button onClick={onClose}>Exit</button>
       </form>
     </div>
   )
-
 }
 
-export default Forms;
+export default IdeaForm;
 
       

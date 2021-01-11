@@ -1,5 +1,4 @@
 import React from "react";
-import Forms from "./Forms";
 
 function Options() {
   return <div className="OptionBar">

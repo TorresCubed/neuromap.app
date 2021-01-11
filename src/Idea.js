@@ -13,21 +13,13 @@ const style = {
   cursor: "move",
 };
 
-export const Idea = ({ id, left, top, title, onEdit, onSelect }) => {
+export const Idea = ({ id, left, top, title, onEdit }) => {
   const [{ isDragging }, drag] = useDrag({
     item: { id, left, top, title, type: ItemTypes.IDEA },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
-
-  const setLinkStart = useCallback(
-    (e) => {
-      e.preventDefault();
-      onSelect(id);
-    },
-    [id, onSelect]
-  );
 
   const handleDoubleClick = useCallback(
     (e) => { 
@@ -45,7 +37,6 @@ export const Idea = ({ id, left, top, title, onEdit, onSelect }) => {
       ref={drag}
       style={{ ...style, left, top }}
       onDoubleClick={handleDoubleClick}
-      onClick={setLinkStart}
     >
       <img className="linker" src={linker} alt="link" />
       {title}
