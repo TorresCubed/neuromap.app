@@ -1,14 +1,14 @@
 import React from "react";
-import FreeForm from "./FreeformIdeas";
-import Options from "./OptionBar";
+import FreeFormIdeas from "./FreeformIdeas";
+import OptionsBar from "./OptionBar";
 
-const Window = () => {
+const Canvas = () => {
   return (
     <div className="Containment">
-      <FreeForm id="freeFormMap" />
-      <Options />
+      <FreeFormIdeas id="freeFormMap" />
+      <OptionsBar />
     </div>
   );
 };
 
-export default Window;
+export default Canvas;

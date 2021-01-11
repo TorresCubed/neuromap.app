@@ -4,22 +4,16 @@ import { ItemTypes } from "./ItemTypes";
 import linker from "./linkerIcon.JPG";
 import "./Idea.css";
 
-const style = {
-  position: "absolute",
-  border: "1px solid gray",
-  overflow: "hidden",
-  backgroundColor: "white",
-  padding: "0.5rem 1rem",
-  cursor: "move",
-};
 
-export const Idea = ({ id, left, top, title, onEdit }) => {
+export const Idea = ({ id, left, top, title, onEdit, selected, onSelect }) => {
   const [{ isDragging }, drag] = useDrag({
     item: { id, left, top, title, type: ItemTypes.IDEA },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
+
+  const select = useCallback(() => onSelect(id), [onSelect, id]);
 
   const handleDoubleClick = useCallback(
     (e) => {
@@ -35,8 +29,10 @@ export const Idea = ({ id, left, top, title, onEdit }) => {
   return (
     <div
       ref={drag}
-      style={{ ...style, left, top }}
+      style={{ left, top }}
       onDoubleClick={handleDoubleClick}
+      className={"idea" + (selected ? " selected" : "")} 
+      onClick={select}
     >
       <img className="linker" src={linker} alt="link" />
       {title}

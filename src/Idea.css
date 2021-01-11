@@ -1,11 +1,26 @@
-.linker {
+.selected .linker {
   position: absolute;
+  display:block;
   width: 10px;
   height: 10px;
   top: 2px;
   left: 2px;
 }
 
-.linker.hidden {
+.linker {
   display: none;
+}
+
+.idea {
+  position: absolute;
+  border: 1px solid gray;
+  background-color: white;
+  padding: 0.5rem 1rem;
+  cursor: move;
+}
+
+.idea.selected {
+  border: 2px solid gold;
+  box-shadow: 4px 4px 8px darkkhaki;
+
 }

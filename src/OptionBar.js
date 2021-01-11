@@ -1,13 +1,12 @@
 import React from "react";
 
-function Options() {
+function OptionsBar() {
   return (
-    <div className="OptionBar">
-      <div id="ideaForm"></div>
-      <button id="addIdea" />
-      <button id="editIDea" />
+  <div className="OptionBar">
+    <div id="ideaForm">
     </div>
+  </div>
   );
 }
 
-export default Options;
+export default OptionsBar;
