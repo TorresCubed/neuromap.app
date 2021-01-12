@@ -4,7 +4,6 @@ import { ItemTypes } from "./ItemTypes";
 import linker from "./linkerIcon.JPG";
 import "./Idea.css";
 
-
 export const Idea = ({ id, left, top, title, onEdit, selected, onSelect }) => {
   const [{ isDragging }, drag] = useDrag({
     item: { id, left, top, title, type: ItemTypes.IDEA },
@@ -31,7 +30,7 @@ export const Idea = ({ id, left, top, title, onEdit, selected, onSelect }) => {
       ref={drag}
       style={{ left, top }}
       onDoubleClick={handleDoubleClick}
-      className={"idea" + (selected ? " selected" : "")} 
+      className={"idea" + (selected ? " selected" : "")}
       onClick={select}
     >
       <img className="linker" src={linker} alt="link" />

@@ -66,7 +66,7 @@ const FreeFormIdeas = () => {
   const handleIdeaChange = useCallback(
     (idea) => {
       if (!idea.id) {
-        idea = update(idea, {id: {$set: uuidv4()}});
+        idea = update(idea, { id: { $set: uuidv4() } });
         setSelectedIdea(idea);
       }
       const { id, title } = idea;
