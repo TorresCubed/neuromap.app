@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import Modal from "./Modal";
 import IdeaForm from "./IdeaForm";
 
-const FreeForm = () => {
+const FreeFormIdeas = () => {
   const [ideas, setIdeas] = useState({
     a: {
       id: "a",
@@ -22,7 +22,8 @@ const FreeForm = () => {
   const ideaModalShow = useCallback(() => setShowIdeaModal(true), []);
   const ideaModalHide = useCallback(() => setShowIdeaModal(false), []);
 
-  const [selectedIdea, setSelectedIdea] = useState();
+  const [selectedIdea, setSelectedIdea] = useState(ideas.a);
+  const setSelected = useCallback((id) => setSelectedIdea(ideas[id]), [ideas]);
 
   const [, drop] = useDrop({
     accept: ItemTypes.IDEA,
@@ -64,7 +65,10 @@ const FreeForm = () => {
 
   const handleIdeaChange = useCallback(
     (idea) => {
-      if (!idea.id) idea = update(idea, { id: { $set: uuidv4() } });
+      if (!idea.id) {
+        idea = update(idea, { id: { $set: uuidv4() } });
+        setSelectedIdea(idea);
+      }
       const { id, title } = idea;
       if (title === "") return;
       setIdeas(
@@ -87,10 +91,16 @@ const FreeForm = () => {
         </Modal>
       )}
       {Object.entries(ideas).map(([key, idea]) => (
-        <Idea key={key} onEdit={editIdea} {...idea} />
+        <Idea
+          key={key}
+          onEdit={editIdea}
+          onSelect={setSelected}
+          selected={idea.id === selectedIdea.id}
+          {...idea}
+        />
       ))}
     </div>
   );
 };
 
-export default FreeForm;
+export default FreeFormIdeas;
