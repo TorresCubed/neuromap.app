@@ -13,25 +13,21 @@
   color: white;
 }
 
-
-
 .FreeformMap {
   flex-grow: 1;
-  order:1;
+  order: 1;
   position: relative;
   overflow: hidden;
-  background:teal;
+  background: teal;
   min-width: 80%;
   max-width: 100%;
-    
 }
 
-
 .OptionBar {
-  background:black;
+  background: black;
   order: 2;
   min-width: 250px;
-  overflow:hidden;
+  overflow: hidden;
   max-width: 20%;
 }
 
