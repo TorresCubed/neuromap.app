@@ -3,7 +3,7 @@ import update from "immutability-helper";
 import "./IdeaForm.css";
 
 const IdeaForm = ({ onSubmit, idea }) => {
-  const [ideaState, setIdeaState] = useState(idea);
+  const [ideaState, setIdeaState] = useState(idea || { title: "" });
 
   const handleChange = useCallback(
     (event) =>
