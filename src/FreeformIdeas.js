@@ -8,22 +8,63 @@ import Modal from "./Modal";
 import IdeaForm from "./IdeaForm";
 import Arrow from "./Arrow";
 
+  const heightAdjustment = 65;
+
+  function calcCoords(height, width, arrowRotation, ideaTop, ideaLeft) {
+    const posArrowRotation = Math.abs(arrowRotation);
+    const referenceAngleOne =
+      (180 / Math.PI) * Math.atan2(height / 2, width / 2);
+    const referenceAngleTwo = 180 - referenceAngleOne;
+    if (
+      posArrowRotation > referenceAngleOne &&
+      posArrowRotation < referenceAngleTwo
+    ) {
+      const top = arrowRotation < 0 ? ideaTop : ideaTop + height;
+      const left =
+        ideaLeft +
+        width / 2 +
+        (height / 2) *
+         Math.tan(((90 - posArrowRotation) * Math.PI) / 180);
+      return [top, left];
+    } else if (posArrowRotation < referenceAngleOne) {
+      const top =
+        ideaTop +
+        height / 2 +
+        (width / 2) * Math.tan((arrowRotation * Math.PI) / 180);
+      const left = ideaLeft + width;
+      return [top, left];
+    } else {
+      const top =
+        ideaTop +
+        height / 2 +
+        (width / 2) * Math.tan(((180 - arrowRotation) * Math.PI) / 180);
+      const left = ideaLeft;
+      return [top, left];
+    }
+  }
+
 const FreeFormIdeas = () => {
   const [ideas, ideasDispatch] = useReducer(
-    (ideas, action) => {
+    (state, action) => {
       switch (action.type) {
         case "update":
-          return update(ideas, {
+          return update(state, {
             [action.id]: {
               $merge: action.data,
             },
           });
         case "create":
-          return update(ideas, {
+          return update(state, {
             [action.id]: {
-              $set: Object.assign({ id: action.id, linkList: [] }, action.data),
+              $set: Object.assign({ id: action.id, linkList: new Set() }, action.data),
             },
           });
+        case "link":
+          return update(state, {
+            [action.fromId]: {
+              linkList: {$add: [action.toId]},
+            }
+          })
         default:
           throw new Error(`Unexpected action type: ${action.type}`);
       }
@@ -34,9 +75,9 @@ const FreeFormIdeas = () => {
         top: 20,
         left: 80,
         title: "Here is an Example to get you Started",
-        linkList: ["b"],
+        linkList: new Set("b"),
       },
-      b: { id: "b", top: 180, left: 20, title: "Great Idea!", linkList: [] },
+      b: { id: "b", top: 180, left: 20, title: "Great Idea!", linkList:  new Set() },
     }
   );
 
@@ -53,30 +94,26 @@ const FreeFormIdeas = () => {
   const [linkingState, setLinkingState] = useState(false);
   const linkBreak = useCallback(() => setLinkingState(false), []);
 
-  const onLinkStart = useCallback((e) => {
-    setLinkerEnd([e.clientY - 65, e.clientX]);
+  const handleLinkStart = useCallback((e) => {
+    setLinkerEnd([e.clientY - heightAdjustment, e.clientX]);
     setLinkingState(true);
   }, []);
 
   const adjustLinker = useCallback(
     (e) => {
-      if (linkingState) {
-        setLinkerEnd([e.clientY - 65, e.clientX]);
-      }
+      if (!linkingState) return;
+      setLinkerEnd([e.clientY - heightAdjustment, e.clientX]);
     },
     [linkingState]
   );
 
-  const onLinkEnd = useCallback(
-    (id) => {
-      if (selectedIdea.id !== id && linkingState) {
-        if (!selectedIdea.linkList.includes(id)) {
-          selectedIdea.linkList.push(id);
-        }
-      }
+  const handleLinkEnd = useCallback(
+    (id) => {      
       setLinkingState(false);
+      if(id === selectedId || !linkingState) return;
+      ideasDispatch({type: "link", fromId: selectedId, toId: id});
     },
-    [selectedIdea, linkingState]
+    [selectedId, linkingState ]
   );
 
   const [, drop] = useDrop({
@@ -127,39 +164,6 @@ const FreeFormIdeas = () => {
     },
     [coords, selectedId]
   );
-
-  function calcCoords(height, width, arrowRotation, ideaTop, ideaLeft) {
-    let top = 0;
-    let left = 0;
-    const referenceAngleOne =
-      (180 / Math.PI) * Math.atan2(height / 2, width / 2);
-    const referenceAngleTwo = 180 - referenceAngleOne;
-    if (
-      Math.abs(arrowRotation) > referenceAngleOne &&
-      Math.abs(arrowRotation) < referenceAngleTwo
-    ) {
-      top = arrowRotation < 0 ? ideaTop : ideaTop + height;
-      left =
-        ideaLeft +
-        width / 2 +
-        (height / 2) *
-          Math.tan(((90 - Math.abs(arrowRotation)) * Math.PI) / 180);
-    } else if (Math.abs(arrowRotation) < referenceAngleOne) {
-      top =
-        ideaTop +
-        height / 2 +
-        (width / 2) * Math.tan((arrowRotation * Math.PI) / 180);
-      left = ideaLeft + width;
-    } else if (Math.abs(arrowRotation) > referenceAngleTwo) {
-      top =
-        ideaTop +
-        height / 2 +
-        (width / 2) * Math.tan(((180 - arrowRotation) * Math.PI) / 180);
-      left = ideaLeft;
-    }
-    return [top, left];
-  }
-
   return (
     <div
       className="FreeformMap"
@@ -179,13 +183,13 @@ const FreeFormIdeas = () => {
           onEdit={editIdea}
           onSelect={setSelectedId}
           selected={idea.id === selectedIdea?.id}
-          linkStart={onLinkStart}
-          linkDestination={onLinkEnd}
+          onLinkStart={handleLinkStart}
+          onLinkEnd={handleLinkEnd}
           ideasDispatch={ideasDispatch}
           {...idea}
         />
       ))}
-      {selectedIdea?.linkList.map((endId) => {
+      {Array.from(selectedIdea?.linkList || [], (endId) => {
         const arrowHeight =
           ideas[endId].top +
           ideas[endId].height / 2 -

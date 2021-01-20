@@ -1,7 +1,7 @@
 import React from "react";
 import "./Arrow.css";
 
-const Link = ({ start, end }) => {
+const Arrow = ({ start, end }) => {
   const arrowHeight = end[0] - start[0];
   const arrowWidth = end[1] - start[1];
   const arrowLength =
@@ -22,4 +22,4 @@ const Link = ({ start, end }) => {
   );
 };
 
-export default Link;
+export default Arrow;

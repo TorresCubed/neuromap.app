@@ -1,6 +1,6 @@
 import React from "react";
 
-const OptionsBar = () => {
+const OptionBar = () => {
   return (
     <div className="OptionBar">
       <div id="ideaForm"></div>
@@ -8,4 +8,4 @@ const OptionsBar = () => {
   );
 };
 
-export default OptionsBar;
+export default OptionBar;

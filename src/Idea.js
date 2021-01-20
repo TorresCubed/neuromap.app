@@ -13,8 +13,8 @@ export const Idea = ({
   onEdit,
   selected,
   onSelect,
-  linkStart,
-  linkDestination,
+  onLinkStart,
+  onLinkEnd,
   ideasDispatch,
 }) => {
   const [domElement, setDomElement] = useState();
@@ -32,9 +32,6 @@ export const Idea = ({
 
   const [{ isDragging }, drag] = useDrag({
     item: { id, left, top, title, linkList, type: ItemTypes.IDEA },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
   });
 
   const domElementRef = useCallback(
@@ -58,14 +55,14 @@ export const Idea = ({
   const linkInitiation = useCallback(
     (e) => {
       e.preventDefault();
-      linkStart(e);
+      onLinkStart(e);
     },
-    [linkStart]
+    [onLinkStart]
   );
 
   const linkerDesignation = useCallback(() => {
-    linkDestination(id);
-  }, [linkDestination, id]);
+    onLinkEnd(id);
+  }, [onLinkEnd, id]);
 
   // if (isDragging) {
   //   return <div ref={drag} />;
