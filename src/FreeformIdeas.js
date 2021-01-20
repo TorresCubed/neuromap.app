@@ -8,40 +8,38 @@ import Modal from "./Modal";
 import IdeaForm from "./IdeaForm";
 import Arrow from "./Arrow";
 
-  const heightAdjustment = 65;
+const heightAdjustment = 65;
 
-  function calcCoords(height, width, arrowRotation, ideaTop, ideaLeft) {
-    const posArrowRotation = Math.abs(arrowRotation);
-    const referenceAngleOne =
-      (180 / Math.PI) * Math.atan2(height / 2, width / 2);
-    const referenceAngleTwo = 180 - referenceAngleOne;
-    if (
-      posArrowRotation > referenceAngleOne &&
-      posArrowRotation < referenceAngleTwo
-    ) {
-      const top = arrowRotation < 0 ? ideaTop : ideaTop + height;
-      const left =
-        ideaLeft +
-        width / 2 +
-        (height / 2) *
-         Math.tan(((90 - posArrowRotation) * Math.PI) / 180);
-      return [top, left];
-    } else if (posArrowRotation < referenceAngleOne) {
-      const top =
-        ideaTop +
-        height / 2 +
-        (width / 2) * Math.tan((arrowRotation * Math.PI) / 180);
-      const left = ideaLeft + width;
-      return [top, left];
-    } else {
-      const top =
-        ideaTop +
-        height / 2 +
-        (width / 2) * Math.tan(((180 - arrowRotation) * Math.PI) / 180);
-      const left = ideaLeft;
-      return [top, left];
-    }
+function calcCoords(height, width, arrowRotation, ideaTop, ideaLeft) {
+  const posArrowRotation = Math.abs(arrowRotation);
+  const referenceAngleOne = (180 / Math.PI) * Math.atan2(height / 2, width / 2);
+  const referenceAngleTwo = 180 - referenceAngleOne;
+  if (
+    posArrowRotation > referenceAngleOne &&
+    posArrowRotation < referenceAngleTwo
+  ) {
+    const top = arrowRotation < 0 ? ideaTop : ideaTop + height;
+    const left =
+      ideaLeft +
+      width / 2 +
+      (height / 2) * Math.tan(((90 - posArrowRotation) * Math.PI) / 180);
+    return [top, left];
+  } else if (posArrowRotation < referenceAngleOne) {
+    const top =
+      ideaTop +
+      height / 2 +
+      (width / 2) * Math.tan((arrowRotation * Math.PI) / 180);
+    const left = ideaLeft + width;
+    return [top, left];
+  } else {
+    const top =
+      ideaTop +
+      height / 2 +
+      (width / 2) * Math.tan(((180 - arrowRotation) * Math.PI) / 180);
+    const left = ideaLeft;
+    return [top, left];
   }
+}
 
 const FreeFormIdeas = () => {
   const [ideas, ideasDispatch] = useReducer(
@@ -56,15 +54,18 @@ const FreeFormIdeas = () => {
         case "create":
           return update(state, {
             [action.id]: {
-              $set: Object.assign({ id: action.id, linkList: new Set() }, action.data),
+              $set: Object.assign(
+                { id: action.id, linkList: new Set() },
+                action.data
+              ),
             },
           });
         case "link":
           return update(state, {
             [action.fromId]: {
-              linkList: {$add: [action.toId]},
-            }
-          })
+              linkList: { $add: [action.toId] },
+            },
+          });
         default:
           throw new Error(`Unexpected action type: ${action.type}`);
       }
@@ -77,7 +78,13 @@ const FreeFormIdeas = () => {
         title: "Here is an Example to get you Started",
         linkList: new Set("b"),
       },
-      b: { id: "b", top: 180, left: 20, title: "Great Idea!", linkList:  new Set() },
+      b: {
+        id: "b",
+        top: 180,
+        left: 20,
+        title: "Great Idea!",
+        linkList: new Set(),
+      },
     }
   );
 
@@ -108,12 +115,12 @@ const FreeFormIdeas = () => {
   );
 
   const handleLinkEnd = useCallback(
-    (id) => {      
+    (id) => {
       setLinkingState(false);
-      if(id === selectedId || !linkingState) return;
-      ideasDispatch({type: "link", fromId: selectedId, toId: id});
+      if (id === selectedId || !linkingState) return;
+      ideasDispatch({ type: "link", fromId: selectedId, toId: id });
     },
-    [selectedId, linkingState ]
+    [selectedId, linkingState]
   );
 
   const [, drop] = useDrop({

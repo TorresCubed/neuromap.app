@@ -35,9 +35,9 @@ export const Idea = ({
   });
 
   const domElementRef = useCallback(
-    (domElement) => {
-      setDomElement(domElement);
-      drag(domElement);
+    (domElementReference) => {
+      setDomElement(domElementReference);
+      drag(domElementReference);
     },
     [drag]
   );
