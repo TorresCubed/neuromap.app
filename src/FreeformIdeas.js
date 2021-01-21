@@ -13,42 +13,34 @@ const heightAdjustment = 65;
 /**
  * Calculates the coordinates of the end of arrow, pointing to the idea
  * 
- * @param {number} height The height of the idea
- * @param {number} width The width of the idea
+ * @param {{ height: number, width: number, top: number, left: number }} idea The idea the arrow is pointing to/from
  * @param {number} arrowRotation The rotation of the arrow (in degrees) in the range (-180, 180]
- * @param {number} ideaTop The y position of the idea
- * @param {number} ideaLeft The x position of the idea
  * @returns {[number, number]} The coordinates ([top, left]) of the end of the arrow
  */
-export function calcCoords(height, width, arrowRotation, ideaTop, ideaLeft) {
+export function calcCoords(idea, arrowRotation) {
+  const { height, width, top: ideaTop, left: ideaLeft } = idea;
   const posArrowRotation = Math.abs(arrowRotation);
-  const referenceAngleOne = (180 / Math.PI) * Math.atan2(height / 2, width / 2);
+  const referenceAngleOne = (180 / Math.PI) * Math.atan2(height, width);
   const referenceAngleTwo = 180 - referenceAngleOne;
   if (
     posArrowRotation > referenceAngleOne &&
     posArrowRotation < referenceAngleTwo
   ) {
-    const top = arrowRotation < 0 ? ideaTop : ideaTop + height;
+    const top = ideaTop + (arrowRotation < 0 ? 0 : height);
     const left =
       ideaLeft +
       width / 2 +
-      (height / 2) * Math.tan(((90 - posArrowRotation) * Math.PI) / 180);
-    return [top, left].map(Math.round);
-  } else if (posArrowRotation <= referenceAngleOne) {
-    const top =
-      ideaTop +
-      height / 2 +
-      (width / 2) * Math.tan((arrowRotation * Math.PI) / 180);
-    const left = ideaLeft + width;
-    return [top, left].map(Math.round);
-  } else {
-    const top =
-      ideaTop +
-      height / 2 +
-      (width / 2) * Math.tan(((180 - arrowRotation) * Math.PI) / 180);
-    const left = ideaLeft;
+      (height / 2) * Math.tan((90 - posArrowRotation) * Math.PI / 180);
     return [top, left].map(Math.round);
   }
+  const isOnRight = posArrowRotation <= referenceAngleOne;  
+
+  const top =
+    ideaTop +
+    height / 2 +
+    (width / 2) * Math.tan((isOnRight ? arrowRotation : 180 - arrowRotation) * Math.PI / 180);
+  const left = ideaLeft + (isOnRight ? width : 0);
+  return [top, left].map(Math.round);
 }
 
 const FreeFormIdeas = () => {
@@ -222,20 +214,8 @@ const FreeFormIdeas = () => {
         return (
           <Arrow
             key={`${selectedId} -> ${endId}`}
-            start={calcCoords(
-              selectedIdea.height,
-              selectedIdea.width,
-              arrowRotationStart,
-              selectedIdea.top,
-              selectedIdea.left
-            )}
-            end={calcCoords(
-              ideas[endId].height,
-              ideas[endId].width,
-              arrowRotationEnd,
-              ideas[endId].top,
-              ideas[endId].left
-            )}
+            start={calcCoords(selectedIdea, arrowRotationStart)}
+            end={calcCoords(ideas[endId], arrowRotationEnd)}
           />
         );
       })}
