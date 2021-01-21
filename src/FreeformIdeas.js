@@ -12,7 +12,7 @@ const heightAdjustment = 65;
 
 /**
  * Calculates the coordinates of the end of arrow, pointing to the idea
- * 
+ *
  * @param {{ height: number, width: number, top: number, left: number }} idea The idea the arrow is pointing to/from
  * @param {number} arrowRotation The rotation of the arrow (in degrees) in the range (-180, 180]
  * @returns {[number, number]} The coordinates ([top, left]) of the end of the arrow
@@ -32,14 +32,17 @@ export function calcCoords(idea, arrowRotation) {
     left =
       ideaLeft +
       width / 2 +
-      (height / 2) * Math.tan((90 - posArrowRotation) * Math.PI / 180);
+      (height / 2) * Math.tan(((90 - posArrowRotation) * Math.PI) / 180);
   } else {
-    const isOnRight = posArrowRotation <= referenceAngleOne;  
+    const isOnRight = posArrowRotation <= referenceAngleOne;
 
     top =
       ideaTop +
       height / 2 +
-      (width / 2) * Math.tan((isOnRight ? arrowRotation : 180 - arrowRotation) * Math.PI / 180);
+      (width / 2) *
+        Math.tan(
+          ((isOnRight ? arrowRotation : 180 - arrowRotation) * Math.PI) / 180
+        );
     left = ideaLeft + (isOnRight ? width : 0);
   }
   return [top, left].map(Math.round);
