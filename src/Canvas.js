@@ -1,12 +1,12 @@
 import React from "react";
 import FreeFormIdeas from "./FreeformIdeas";
-import OptionsBar from "./OptionBar";
+import OptionBar from "./OptionBar";
 
 const Canvas = () => {
   return (
     <div className="Containment">
       <FreeFormIdeas id="freeFormMap" />
-      <OptionsBar />
+      <OptionBar />
     </div>
   );
 };
