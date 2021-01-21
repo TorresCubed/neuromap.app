@@ -30,7 +30,7 @@ export const Idea = ({
     });
   });
 
-  const [{ isDragging }, drag] = useDrag({
+  const [, drag] = useDrag({
     item: { id, left, top, title, linkList, type: ItemTypes.IDEA },
   });
 
