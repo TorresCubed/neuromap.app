@@ -22,24 +22,26 @@ export function calcCoords(idea, arrowRotation) {
   const posArrowRotation = Math.abs(arrowRotation);
   const referenceAngleOne = (180 / Math.PI) * Math.atan2(height, width);
   const referenceAngleTwo = 180 - referenceAngleOne;
+  let top, left;
+
   if (
     posArrowRotation > referenceAngleOne &&
     posArrowRotation < referenceAngleTwo
   ) {
-    const top = ideaTop + (arrowRotation < 0 ? 0 : height);
-    const left =
+    top = ideaTop + (arrowRotation < 0 ? 0 : height);
+    left =
       ideaLeft +
       width / 2 +
       (height / 2) * Math.tan((90 - posArrowRotation) * Math.PI / 180);
-    return [top, left].map(Math.round);
-  }
-  const isOnRight = posArrowRotation <= referenceAngleOne;  
+  } else {
+    const isOnRight = posArrowRotation <= referenceAngleOne;  
 
-  const top =
-    ideaTop +
-    height / 2 +
-    (width / 2) * Math.tan((isOnRight ? arrowRotation : 180 - arrowRotation) * Math.PI / 180);
-  const left = ideaLeft + (isOnRight ? width : 0);
+    top =
+      ideaTop +
+      height / 2 +
+      (width / 2) * Math.tan((isOnRight ? arrowRotation : 180 - arrowRotation) * Math.PI / 180);
+    left = ideaLeft + (isOnRight ? width : 0);
+  }
   return [top, left].map(Math.round);
 }
 
