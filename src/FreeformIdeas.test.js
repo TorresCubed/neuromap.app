@@ -17,10 +17,10 @@ test("Bottom-right corner", () => {
 
 test("Top-right corner", () => {
   const value = calcCoords(10, 10, -45, 0, 0);
-  expect(value).toEqual([0, 10])
+  expect(value).toEqual([0, 10]);
 });
 
-test("Bottom-middle" , () => {
+test("Bottom-middle", () => {
   const value = calcCoords(10, 10, 90, 0, 0);
   expect(value).toEqual([10, 5]);
 });

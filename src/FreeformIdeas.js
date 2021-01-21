@@ -12,7 +12,7 @@ const heightAdjustment = 65;
 
 /**
  * Calculates the coordinates of the end of arrow, pointing to the idea
- * 
+ *
  * @param {number} height The height of the idea
  * @param {number} width The width of the idea
  * @param {number} arrowRotation The rotation of the arrow (in degrees) in the range (-180, 180]
