@@ -10,7 +10,17 @@ import Arrow from "./Arrow";
 
 const heightAdjustment = 65;
 
-function calcCoords(height, width, arrowRotation, ideaTop, ideaLeft) {
+/**
+ * Calculates the coordinates of the end of arrow, pointing to the idea
+ * 
+ * @param {number} height The height of the idea
+ * @param {number} width The width of the idea
+ * @param {number} arrowRotation The rotation of the arrow (in degrees) in the range (-180, 180]
+ * @param {number} ideaTop The y position of the idea
+ * @param {number} ideaLeft The x position of the idea
+ * @returns {[number, number]} The coordinates ([top, left]) of the end of the arrow
+ */
+export function calcCoords(height, width, arrowRotation, ideaTop, ideaLeft) {
   const posArrowRotation = Math.abs(arrowRotation);
   const referenceAngleOne = (180 / Math.PI) * Math.atan2(height / 2, width / 2);
   const referenceAngleTwo = 180 - referenceAngleOne;
@@ -23,21 +33,21 @@ function calcCoords(height, width, arrowRotation, ideaTop, ideaLeft) {
       ideaLeft +
       width / 2 +
       (height / 2) * Math.tan(((90 - posArrowRotation) * Math.PI) / 180);
-    return [top, left];
-  } else if (posArrowRotation < referenceAngleOne) {
+    return [top, left].map(Math.round);
+  } else if (posArrowRotation <= referenceAngleOne) {
     const top =
       ideaTop +
       height / 2 +
       (width / 2) * Math.tan((arrowRotation * Math.PI) / 180);
     const left = ideaLeft + width;
-    return [top, left];
+    return [top, left].map(Math.round);
   } else {
     const top =
       ideaTop +
       height / 2 +
       (width / 2) * Math.tan(((180 - arrowRotation) * Math.PI) / 180);
     const left = ideaLeft;
-    return [top, left];
+    return [top, left].map(Math.round);
   }
 }
 
