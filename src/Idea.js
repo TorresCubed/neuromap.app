@@ -1,8 +1,11 @@
-import React, { useCallback, useLayoutEffect, useState } from "react";
+import React, { useCallback, useLayoutEffect, useState, useContext } from "react";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import linker from "./linkerIcon.JPG";
+import { IdeaContext } from "./Window";
 import "./Idea.css";
+
+
 
 export const Idea = ({
   id,
@@ -15,12 +18,13 @@ export const Idea = ({
   onSelect,
   onLinkStart,
   onLinkEnd,
-  ideasDispatch,
 }) => {
+  
+  const ideaPackage = useContext(IdeaContext);
   const [domElement, setDomElement] = useState();
 
   useLayoutEffect(() => {
-    ideasDispatch({
+    ideaPackage.ideasDispatch({
       type: "update",
       id,
       data: {
@@ -51,6 +55,7 @@ export const Idea = ({
     },
     [onEdit, id, title]
   );
+  
 
   const linkInitiation = useCallback(
     (e) => {
@@ -64,24 +69,33 @@ export const Idea = ({
     onLinkEnd(id);
   }, [onLinkEnd, id]);
 
-  // if (isDragging) {
-  //   return <div ref={drag} />;
-  // }
+  const domElementRef = useCallback(
+    (domElementReference) => {
+      setDomElement(domElementReference);
+      drag(domElementReference);
+    },
+    [drag]
+  );
+
+  
+  let selectedStyle = selected ? {
+    border: "2px solid" + ideaPackage.selectedIdeaColor,
+    boxShadow: "4px 4px 15px" + ideaPackage.selectedIdeaColor,
+    zIndex: "2",
+  } : {};
+
+
   return (
     <div
       ref={domElementRef}
-      style={{ left, top }}
+      style={{ left, top, ...selectedStyle }}
       onDoubleClick={handleDoubleClick}
       className={"idea" + (selected ? " selected" : "")}
+      onMouseUp={linkerDesignation}
       onClick={select}
       onMouseUp={linkerDesignation}
     >
-      <img
-        className="linker"
-        src={linker}
-        alt="link"
-        onMouseDown={linkInitiation}
-      />
+      <img className="linker" src={linker} alt="link" onMouseDown={linkInitiation} />
       {title}
     </div>
   );
