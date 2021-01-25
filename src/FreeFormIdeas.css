@@ -1,0 +1,13 @@
+
+.FreeFormIdeas {
+  flex-grow: 1;
+  order: 1;
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+  top:initial;
+}
+
+.linkingArrow .line{
+  z-index: 3;
+}

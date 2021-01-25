@@ -3,13 +3,18 @@ import update from "immutability-helper";
 import "./IdeaForm.css";
 
 const IdeaForm = ({ onSubmit, idea }) => {
-  const [ideaState, setIdeaState] = useState(idea || { title: "" });
+  const [ideaState, setIdeaState] = useState(idea || {title: ""});
+
+  if(ideaState.id !== idea?.id){
+    setIdeaState(idea || {title: ""})
+  }
 
   const handleChange = useCallback(
     (event) =>
       setIdeaState(update(ideaState, { title: { $set: event.target.value } })),
     [ideaState]
   );
+
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
@@ -25,13 +30,13 @@ const IdeaForm = ({ onSubmit, idea }) => {
       button: "Add",
     },
     editForm: {
-      header: "Would you like to change your Idea?",
-      label: "New Idea:",
+      header: "Enter Idea Change",
+      label: "Change Idea:",
       button: "Change",
     },
   };
 
-  const formType = ideaState.id ? "editForm" : "addForm";
+  const formType = ideaState?.id ? "editForm" : "addForm";
 
   return (
     <div className="form">
@@ -41,7 +46,7 @@ const IdeaForm = ({ onSubmit, idea }) => {
           <label>{entries[formType].label}</label>
         </div>
         <div>
-          <input type="text" value={ideaState.title} onChange={handleChange} />
+          <textarea type="text" value={ideaState.title} onChange={handleChange} />
         </div>
         <div>
           <input
