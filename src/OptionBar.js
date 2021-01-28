@@ -73,14 +73,13 @@ const OptionBar = () => {
     <div className="OptionBar" style={{ background: optionBarColor }}>
       <div className="selector">
         <button style={{ margin: "5px" }} onClick={toggleFormType}>
-          {" "}
           Edit Selected Idea
         </button>
       </div>
       <div>
         <IdeaForm
           onSubmit={handleIdeaChange}
-          idea={ideaFormType ? selectedIdea : ""}
+          idea={ideaFormType ? selectedIdea : {}}
         />
       </div>
       <div className="selector">

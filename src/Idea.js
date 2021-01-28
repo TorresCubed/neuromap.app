@@ -70,18 +70,11 @@ export const Idea = ({
     onLinkEnd(id);
   }, [onLinkEnd, id]);
 
-  const domElementRef = useCallback(
-    (domElementReference) => {
-      setDomElement(domElementReference);
-      drag(domElementReference);
-    },
-    [drag]
-  );
 
   let selectedStyle = selected
     ? {
-        border: "2px solid" + ideaPackage.selectedIdeaColor,
-        boxShadow: "4px 4px 15px" + ideaPackage.selectedIdeaColor,
+        border: `2px solid ${ideaPackage.selectedIdeaColor}`,
+        boxShadow: `4px 4px 15px ${ideaPackage.selectedIdeaColor}`,
         zIndex: "2",
       }
     : {};
@@ -94,7 +87,6 @@ export const Idea = ({
       className={"idea" + (selected ? " selected" : "")}
       onMouseUp={linkerDesignation}
       onClick={select}
-      onMouseUp={linkerDesignation}
     >
       <img
         className="linker"
