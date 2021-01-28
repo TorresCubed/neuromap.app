@@ -46,10 +46,7 @@ const IdeaForm = ({ onSubmit, idea }) => {
           <label>{entries[formType].label}</label>
         </div>
         <div>
-          <textarea
-            value={ideaState.title}
-            onChange={handleChange}
-          />
+          <textarea value={ideaState.title} onChange={handleChange} />
         </div>
         <div>
           <input
