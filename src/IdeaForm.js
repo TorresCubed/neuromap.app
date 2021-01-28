@@ -36,7 +36,7 @@ const IdeaForm = ({ onSubmit, idea }) => {
     },
   };
 
-  const formType = ideaState?.id ? "editForm" : "addForm";
+  const formType = ideaState.id ? "editForm" : "addForm";
 
   return (
     <div className="form">
@@ -47,7 +47,6 @@ const IdeaForm = ({ onSubmit, idea }) => {
         </div>
         <div>
           <textarea
-            type="text"
             value={ideaState.title}
             onChange={handleChange}
           />
