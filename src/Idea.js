@@ -70,7 +70,6 @@ export const Idea = ({
     onLinkEnd(id);
   }, [onLinkEnd, id]);
 
-
   let selectedStyle = selected
     ? {
         border: `2px solid ${ideaPackage.selectedIdeaColor}`,
