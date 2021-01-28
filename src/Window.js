@@ -1,16 +1,13 @@
-import React, {useState, useReducer, useCallback } from 'react';
+import React, { useState, useReducer, useCallback } from "react";
 import "./App.css";
 import FreeFormIdeas from "./FreeformIdeas";
 import OptionBar from "./OptionBar";
 import update from "immutability-helper";
 
-
-  
 export const IdeaContext = React.createContext({});
 
 const Window = () => {
-
-  const [selectedIdeaColor, setSelectedIdeaColor] = useState("#FFD700")
+  const [selectedIdeaColor, setSelectedIdeaColor] = useState("#FFD700");
   const [freeFormIdeasColor, setFreeFormIdeasColor] = useState("#008080");
   const [selectedId, setSelectedId] = useState("a");
 
@@ -59,25 +56,23 @@ const Window = () => {
       },
     }
   );
-  
-  
-
 
   return (
-    <div className="Containment">      
-      <IdeaContext.Provider value={
-        {
+    <div className="Containment">
+      <IdeaContext.Provider
+        value={{
           ideas: ideas,
-          ideasDispatch:ideasDispatch,
-          selectedId:selectedId,
-          setSelectedId:setSelectedId,
+          ideasDispatch: ideasDispatch,
+          selectedId: selectedId,
+          setSelectedId: setSelectedId,
           freeFormIdeasColor,
           setFreeFormIdeasColor,
           selectedIdeaColor,
           setSelectedIdeaColor,
-          }}>
-        <FreeFormIdeas/>
-        <OptionBar id="OptionBar"/>
+        }}
+      >
+        <FreeFormIdeas />
+        <OptionBar id="OptionBar" />
       </IdeaContext.Provider>
     </div>
   );

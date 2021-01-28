@@ -13,7 +13,7 @@ import "./FreeFormIdeas.css";
 
 /**
  * Calculates the coordinates of the end of arrow, pointing to the idea
- * 
+ *
  * @param {{ height: number, width: number, top: number, left: number }} idea The idea the arrow is pointing to/from
  * @param {number} arrowRotation The rotation of the arrow (in degrees) in the range (-180, 180]
  * @returns {[number, number]} The coordinates ([top, left]) of the end of the arrow
@@ -33,22 +33,23 @@ export function calcCoords(idea, arrowRotation) {
     left =
       ideaLeft +
       width / 2 +
-      (height / 2) * Math.tan((90 - posArrowRotation) * Math.PI / 180);
+      (height / 2) * Math.tan(((90 - posArrowRotation) * Math.PI) / 180);
   } else {
-    const isOnRight = posArrowRotation <= referenceAngleOne;  
+    const isOnRight = posArrowRotation <= referenceAngleOne;
 
     top =
       ideaTop +
       height / 2 +
-      (width / 2) * Math.tan((isOnRight ? arrowRotation : 180 - arrowRotation) * Math.PI / 180);
+      (width / 2) *
+        Math.tan(
+          ((isOnRight ? arrowRotation : 180 - arrowRotation) * Math.PI) / 180
+        );
     left = ideaLeft + (isOnRight ? width : 0);
   }
   return [top, left].map(Math.round);
 }
 
 const FreeFormIdeas = () => {
-
-
   const [showIdeaModal, setShowIdeaModal] = useState(false);
 
   const canvasOffset = useContext(headerContext);
@@ -67,10 +68,13 @@ const FreeFormIdeas = () => {
   const [linkingState, setLinkingState] = useState(false);
   const linkBreak = useCallback(() => setLinkingState(false), []);
 
-  const handleLinkStart = useCallback((e) => {
-    setLinkerEnd([e.clientY - canvasOffset, e.clientX]);
-    setLinkingState(true);
-  }, [canvasOffset]);
+  const handleLinkStart = useCallback(
+    (e) => {
+      setLinkerEnd([e.clientY - canvasOffset, e.clientX]);
+      setLinkingState(true);
+    },
+    [canvasOffset]
+  );
 
   const adjustLinker = useCallback(
     (e) => {
@@ -95,10 +99,13 @@ const FreeFormIdeas = () => {
       const delta = monitor.getDifferenceFromInitialOffset();
       const left = Math.round(item.left + delta.x);
       const top = Math.round(item.top + delta.y);
-      ideaPackage.ideasDispatch({ type: "update", id: item.id, data: { left, top } });
+      ideaPackage.ideasDispatch({
+        type: "update",
+        id: item.id,
+        data: { left, top },
+      });
     },
   });
-
 
   const editIdea = useCallback(
     (id) => {
@@ -112,8 +119,8 @@ const FreeFormIdeas = () => {
     (e) => {
       if (e.target.className !== "FreeFormIdeas") return;
       e.preventDefault();
-      setCoords({top:e.clientY-canvasOffset, left:e.clientX});
-      
+      setCoords({ top: e.clientY - canvasOffset, left: e.clientX });
+
       ideaPackage.setSelectedId(uuidv4());
       setTimeout(ideaModalShow, 300);
     },
@@ -123,7 +130,7 @@ const FreeFormIdeas = () => {
   const handleIdeaChange = useCallback(
     (idea) => {
       ideaModalHide();
-      if(idea.title === "") return;
+      if (idea.title === "") return;
       if (!idea.id) {
         ideaPackage.ideasDispatch({
           type: "create",
@@ -137,15 +144,11 @@ const FreeFormIdeas = () => {
     [coords, selectedId, ideaPackage, ideaModalHide]
   );
 
-
-    
-
-
   return (
-    <div    
+    <div
       ref={drop}
       className="FreeFormIdeas"
-      style={{background: ideaPackage.freeFormIdeasColor}}
+      style={{ background: ideaPackage.freeFormIdeasColor }}
       onDoubleClick={handleDoubleClick}
       onMouseUp={linkBreak}
       onMouseMove={adjustLinker}
@@ -189,9 +192,9 @@ const FreeFormIdeas = () => {
       })}
       {linkingState && (
         <div className="linkingArrow">
-          <Arrow 
+          <Arrow
             start={[selectedIdea.top, selectedIdea.left]}
-            end={linkerEnd} 
+            end={linkerEnd}
           />
         </div>
       )}

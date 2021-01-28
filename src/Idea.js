@@ -1,11 +1,14 @@
-import React, { useCallback, useLayoutEffect, useState, useContext } from "react";
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useState,
+  useContext,
+} from "react";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import linker from "./linkerIcon.JPG";
 import { IdeaContext } from "./Window";
 import "./Idea.css";
-
-
 
 export const Idea = ({
   id,
@@ -19,7 +22,6 @@ export const Idea = ({
   onLinkStart,
   onLinkEnd,
 }) => {
-  
   const ideaPackage = useContext(IdeaContext);
   const [domElement, setDomElement] = useState();
 
@@ -55,7 +57,6 @@ export const Idea = ({
     },
     [onEdit, id, title]
   );
-  
 
   const linkInitiation = useCallback(
     (e) => {
@@ -77,13 +78,13 @@ export const Idea = ({
     [drag]
   );
 
-  
-  let selectedStyle = selected ? {
-    border: "2px solid" + ideaPackage.selectedIdeaColor,
-    boxShadow: "4px 4px 15px" + ideaPackage.selectedIdeaColor,
-    zIndex: "2",
-  } : {};
-
+  let selectedStyle = selected
+    ? {
+        border: "2px solid" + ideaPackage.selectedIdeaColor,
+        boxShadow: "4px 4px 15px" + ideaPackage.selectedIdeaColor,
+        zIndex: "2",
+      }
+    : {};
 
   return (
     <div
@@ -95,7 +96,12 @@ export const Idea = ({
       onClick={select}
       onMouseUp={linkerDesignation}
     >
-      <img className="linker" src={linker} alt="link" onMouseDown={linkInitiation} />
+      <img
+        className="linker"
+        src={linker}
+        alt="link"
+        onMouseDown={linkInitiation}
+      />
       {title}
     </div>
   );

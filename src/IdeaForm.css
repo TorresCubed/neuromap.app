@@ -1,8 +1,8 @@
 .form {
-  background-color:snow;
+  background-color: snow;
   align-self: center;
   border-radius: 5px;
-  width:100%;
+  width: 100%;
 }
 
 .form > h1 {
@@ -12,7 +12,7 @@
 .form textarea {
   width: 80%;
   height: 80px;
-  resize:none;
+  resize: none;
 }
 
 .submitButton {

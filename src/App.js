@@ -4,22 +4,14 @@ import "./App.css";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 
-
-  
 export const headerContext = React.createContext({});
 
 const App = () => {
+  const [headerHeight, setHeaderHeight] = useState(65);
 
-  
-  const [headerHeight, setHeaderHeight] = useState(65)
-
-  const domElementRef = useCallback(
-    (domElementReference) => {
-      setHeaderHeight(domElementReference.offsetHeight);
-    },
-    []
-  );
-
+  const domElementRef = useCallback((domElementReference) => {
+    setHeaderHeight(domElementReference.offsetHeight);
+  }, []);
 
   return (
     <div className="App">
@@ -35,6 +27,6 @@ const App = () => {
       </div>
     </div>
   );
-}
+};
 
 export default App;
