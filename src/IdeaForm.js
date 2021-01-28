@@ -3,10 +3,10 @@ import update from "immutability-helper";
 import "./IdeaForm.css";
 
 const IdeaForm = ({ onSubmit, idea }) => {
-  const [ideaState, setIdeaState] = useState(idea || {title: ""});
+  const [ideaState, setIdeaState] = useState(idea || { title: "" });
 
-  if(ideaState.id !== idea?.id){
-    setIdeaState(idea || {title: ""})
+  if (ideaState.id !== idea?.id) {
+    setIdeaState(idea || { title: "" });
   }
 
   const handleChange = useCallback(
@@ -46,7 +46,11 @@ const IdeaForm = ({ onSubmit, idea }) => {
           <label>{entries[formType].label}</label>
         </div>
         <div>
-          <textarea type="text" value={ideaState.title} onChange={handleChange} />
+          <textarea
+            type="text"
+            value={ideaState.title}
+            onChange={handleChange}
+          />
         </div>
         <div>
           <input
