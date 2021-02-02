@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useLayoutEffect,
-  useContext,
-  useRef,
-} from "react";
+import React, { useCallback, useLayoutEffect, useContext, useRef } from "react";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import linker from "./linkerIcon.JPG";
@@ -23,7 +18,6 @@ export const Idea = ({
   onLinkStart,
   onLinkEnd,
 }) => {
-
   const themePackage = useContext(ThemeContext);
 
   const ideaPackage = useContext(IdeaContext);
