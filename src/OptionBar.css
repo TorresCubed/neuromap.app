@@ -2,6 +2,8 @@
   order: 2;
   min-width: 230px;
   overflow: hidden;
+
+
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

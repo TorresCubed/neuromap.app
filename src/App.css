@@ -4,20 +4,20 @@
 
 .App-header {
   background-color: #282c34;
-  height: 9vh;
+  height: 9vmin;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 3vh;
+  font-size: 3vmin;
   color: white;
 }
 
 .Containment {
   display: flex;
   overflow: hidden;
+  position:absolute;
   flex-direction: row;
-  position: relative;
   background-color: red;
   min-height: 91vh;
   width: 100vw;
