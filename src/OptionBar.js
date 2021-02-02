@@ -2,13 +2,12 @@ import React, { useCallback, useContext, useState } from "react";
 import IdeaForm from "./IdeaForm";
 import { ThemeContext } from "./ThemeContext";
 import { IdeaContext } from "./IdeaContext";
-import update from "immutability-helper";   
+import update from "immutability-helper";
 import { v4 as uuidv4 } from "uuid";
 import "./OptionBar.css";
 import { SketchPicker } from "react-color";
 
 const OptionBar = () => {
-  
   const ideaPackage = useContext(IdeaContext);
   const selectedId = ideaPackage.selectedId;
   const selectedIdea = ideaPackage.ideas[selectedId];
@@ -23,13 +22,22 @@ const OptionBar = () => {
       setBackground(color.hex);
       switch (colorSelectorValue) {
         case "1":
-          themePackage.updateTheme({element:"optionBarColor", color:color.hex});
+          themePackage.updateTheme({
+            element: "optionBarColor",
+            color: color.hex,
+          });
           break;
         case "2":
-          themePackage.updateTheme({element:"freeFormIdeasColor", color:color.hex});
+          themePackage.updateTheme({
+            element: "freeFormIdeasColor",
+            color: color.hex,
+          });
           break;
         case "3":
-          themePackage.updateTheme({element:"selectedIdeaColor", color:color.hex});
+          themePackage.updateTheme({
+            element: "selectedIdeaColor",
+            color: color.hex,
+          });
           break;
         default:
           return;
@@ -46,7 +54,7 @@ const OptionBar = () => {
     }
     setHiding({ display: "flex" });
   }, []);
-  
+
   const [showIdeaChangeForm, setShowIdeaChangeForm] = useState(false);
   const toggleFormType = useCallback(() => {
     setShowIdeaChangeForm(!showIdeaChangeForm);
@@ -73,7 +81,10 @@ const OptionBar = () => {
   );
 
   return (
-    <div className="OptionBar" style={{ background: themePackage.theme.optionBarColor }}>
+    <div
+      className="OptionBar"
+      style={{ background: themePackage.theme.optionBarColor }}
+    >
       <div className="selector">
         <button style={{ margin: "5px" }} onClick={toggleFormType}>
           Edit Selected Idea

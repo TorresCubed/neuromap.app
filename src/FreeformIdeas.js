@@ -1,6 +1,12 @@
-import React, { useCallback, useContext, useState, useLayoutEffect, useRef } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useState,
+  useLayoutEffect,
+  useRef,
+} from "react";
 import { IdeaContext } from "./IdeaContext";
-import { ThemeContext } from "./ThemeContext"
+import { ThemeContext } from "./ThemeContext";
 import { useDrop } from "react-dnd";
 import { Idea } from "./Idea";
 import { ItemTypes } from "./ItemTypes";
@@ -50,7 +56,6 @@ export function calcCoords(idea, arrowRotation) {
 }
 
 const FreeFormIdeas = () => {
-  
   const themePackage = useContext(ThemeContext);
 
   const ideaPackage = useContext(IdeaContext);
@@ -72,7 +77,7 @@ const FreeFormIdeas = () => {
   const [canvasOffset, setcanvasOffset] = useState(60);
   const updateCanvasOffset = () => {
     setcanvasOffset(domElement.current.getBoundingClientRect().y);
-  }
+  };
 
   const handleLinkStart = useCallback(
     (e) => {
@@ -150,20 +155,21 @@ const FreeFormIdeas = () => {
     [coords, selectedId, ideaPackage, ideaModalHide]
   );
 
-  const domElementRef = useCallback((domElementReference) => {
-    domElement.current = domElementReference;
-    updateCanvasOffset();
-    drop(domElementReference);
-  }, [drop]);
+  const domElementRef = useCallback(
+    (domElementReference) => {
+      domElement.current = domElementReference;
+      updateCanvasOffset();
+      drop(domElementReference);
+    },
+    [drop]
+  );
 
   useLayoutEffect(() => {
     window.addEventListener("resize", updateCanvasOffset);
-    return() => {
-      window.removeEventListener("resize", updateCanvasOffset)
-    }
+    return () => {
+      window.removeEventListener("resize", updateCanvasOffset);
+    };
   }, []);
-
-
 
   return (
     <div

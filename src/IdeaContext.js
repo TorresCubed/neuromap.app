@@ -2,7 +2,6 @@ import React, { useReducer, useState } from "react";
 import update from "immutability-helper";
 
 export const IdeaStateManagementProvider = () => {
-  
   const [selectedId, setSelectedId] = useState("a");
 
   const [ideas, ideasDispatch] = useReducer(
@@ -49,14 +48,14 @@ export const IdeaStateManagementProvider = () => {
         linkList: new Set(),
       },
     }
-  ); 
+  );
 
-  return({
-    ideas:ideas,
-    ideasDispatch:ideasDispatch,
-    selectedId:selectedId,
-    setSelectedId:setSelectedId
-  })
-}
+  return {
+    ideas: ideas,
+    ideasDispatch: ideasDispatch,
+    selectedId: selectedId,
+    setSelectedId: setSelectedId,
+  };
+};
 
 export const IdeaContext = React.createContext();
