@@ -19,6 +19,7 @@ const IdeaForm = ({ onSubmit, idea }) => {
     (e) => {
       e.preventDefault();
       onSubmit(ideaState);
+      setIdeaState({ title: "" });
     },
     [onSubmit, ideaState]
   );

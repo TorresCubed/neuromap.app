@@ -1,10 +1,10 @@
 .FreeFormIdeas {
-  flex-grow: 1;
+  top:inherit;
   order: 1;
   position: relative;
   overflow: hidden;
-  max-width: 100%;
-  top: initial;
+  width:100%;
+  
 }
 
 .linkingArrow .line {

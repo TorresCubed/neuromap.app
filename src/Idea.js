@@ -1,13 +1,14 @@
 import React, {
   useCallback,
   useLayoutEffect,
-  useState,
   useContext,
+  useRef,
 } from "react";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import linker from "./linkerIcon.JPG";
-import { IdeaContext } from "./Window";
+import { IdeaContext } from "./IdeaContext";
+import { ThemeContext } from "./ThemeContext";
 import "./Idea.css";
 
 export const Idea = ({
@@ -22,16 +23,19 @@ export const Idea = ({
   onLinkStart,
   onLinkEnd,
 }) => {
-  const ideaPackage = useContext(IdeaContext);
-  const [domElement, setDomElement] = useState();
 
+  const themePackage = useContext(ThemeContext);
+
+  const ideaPackage = useContext(IdeaContext);
+
+  const domElement = useRef();
   useLayoutEffect(() => {
     ideaPackage.ideasDispatch({
       type: "update",
       id,
       data: {
-        width: domElement?.offsetWidth,
-        height: domElement?.offsetHeight,
+        width: domElement.current?.offsetWidth,
+        height: domElement.current?.offsetHeight,
       },
     });
   });
@@ -42,7 +46,7 @@ export const Idea = ({
 
   const domElementRef = useCallback(
     (domElementReference) => {
-      setDomElement(domElementReference);
+      domElement.current = domElementReference;
       drag(domElementReference);
     },
     [drag]
@@ -72,8 +76,8 @@ export const Idea = ({
 
   let selectedStyle = selected
     ? {
-        border: `2px solid ${ideaPackage.selectedIdeaColor}`,
-        boxShadow: `4px 4px 15px ${ideaPackage.selectedIdeaColor}`,
+        border: `2px solid ${themePackage.theme.selectedIdeaColor}`,
+        boxShadow: `4px 4px 15px ${themePackage.theme.selectedIdeaColor}`,
         zIndex: "2",
       }
     : {};

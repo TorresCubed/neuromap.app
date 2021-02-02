@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useState } from "react";
-import { IdeaContext } from "./Window";
-import { headerContext } from "./App";
+import React, { useCallback, useContext, useState, useLayoutEffect, useRef } from "react";
+import { IdeaContext } from "./IdeaContext";
+import { ThemeContext } from "./ThemeContext"
 import { useDrop } from "react-dnd";
 import { Idea } from "./Idea";
 import { ItemTypes } from "./ItemTypes";
@@ -50,23 +50,29 @@ export function calcCoords(idea, arrowRotation) {
 }
 
 const FreeFormIdeas = () => {
-  const [showIdeaModal, setShowIdeaModal] = useState(false);
+  
+  const themePackage = useContext(ThemeContext);
 
-  const canvasOffset = useContext(headerContext);
   const ideaPackage = useContext(IdeaContext);
   const ideas = ideaPackage.ideas;
   const selectedId = ideaPackage.selectedId;
+  const selectedIdea = ideas[selectedId];
 
   const [coords, setCoords] = useState({ top: 0, left: 0 });
 
+  const [showIdeaModal, setShowIdeaModal] = useState(false);
   const ideaModalShow = useCallback(() => setShowIdeaModal(true), []);
   const ideaModalHide = useCallback(() => setShowIdeaModal(false), []);
-
-  const selectedIdea = ideas[selectedId];
 
   const [linkerEnd, setLinkerEnd] = useState();
   const [linkingState, setLinkingState] = useState(false);
   const linkBreak = useCallback(() => setLinkingState(false), []);
+
+  const domElement = useRef();
+  const [canvasOffset, setcanvasOffset] = useState(60);
+  const updateCanvasOffset = () => {
+    setcanvasOffset(domElement.current.getBoundingClientRect().y);
+  }
 
   const handleLinkStart = useCallback(
     (e) => {
@@ -144,11 +150,26 @@ const FreeFormIdeas = () => {
     [coords, selectedId, ideaPackage, ideaModalHide]
   );
 
+  const domElementRef = useCallback((domElementReference) => {
+    domElement.current = domElementReference;
+    updateCanvasOffset();
+    drop(domElementReference);
+  }, [drop]);
+
+  useLayoutEffect(() => {
+    window.addEventListener("resize", updateCanvasOffset);
+    return() => {
+      window.removeEventListener("resize", updateCanvasOffset)
+    }
+  }, []);
+
+
+
   return (
     <div
-      ref={drop}
+      ref={domElementRef}
       className="FreeFormIdeas"
-      style={{ background: ideaPackage.freeFormIdeasColor }}
+      style={{ background: themePackage.theme.freeFormIdeasColor }}
       onDoubleClick={handleDoubleClick}
       onMouseUp={linkBreak}
       onMouseMove={adjustLinker}
