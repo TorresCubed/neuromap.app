@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useState,
-  useLayoutEffect,
-  useRef,
-} from "react";
+import React, { useCallback, useContext, useState, useRef, useEffect } from "react";
 import { IdeaContext } from "./IdeaContext";
 import { ThemeContext } from "./ThemeContext";
 import { useDrop } from "react-dnd";
@@ -56,12 +50,12 @@ export function calcCoords(idea, arrowRotation) {
 }
 
 const FreeFormIdeas = () => {
-  const themePackage = useContext(ThemeContext);
+  
+  const { theme } = useContext(ThemeContext);
 
-  const ideaPackage = useContext(IdeaContext);
-  const ideas = ideaPackage.ideas;
-  const selectedId = ideaPackage.selectedId;
+  const { ideas, ideasDispatch, selectedId, setSelectedId } = useContext(IdeaContext);
   const selectedIdea = ideas[selectedId];
+  
 
   const [coords, setCoords] = useState({ top: 0, left: 0 });
 
@@ -99,9 +93,9 @@ const FreeFormIdeas = () => {
     (id) => {
       setLinkingState(false);
       if (id === selectedId || !linkingState) return;
-      ideaPackage.ideasDispatch({ type: "link", fromId: selectedId, toId: id });
+      ideasDispatch({ type: "link", fromId: selectedId, toId: id });
     },
-    [selectedId, linkingState, ideaPackage]
+    [selectedId, linkingState, ideasDispatch]
   );
 
   const [, drop] = useDrop({
@@ -110,7 +104,7 @@ const FreeFormIdeas = () => {
       const delta = monitor.getDifferenceFromInitialOffset();
       const left = Math.round(item.left + delta.x);
       const top = Math.round(item.top + delta.y);
-      ideaPackage.ideasDispatch({
+      ideasDispatch({
         type: "update",
         id: item.id,
         data: { left, top },
@@ -120,10 +114,10 @@ const FreeFormIdeas = () => {
 
   const editIdea = useCallback(
     (id) => {
-      ideaPackage.setSelectedId(id);
+      setSelectedId(id);
       ideaModalShow(true);
     },
-    [ideaModalShow, ideaPackage]
+    [ideaModalShow, setSelectedId]
   );
 
   const handleDoubleClick = useCallback(
@@ -132,10 +126,10 @@ const FreeFormIdeas = () => {
       e.preventDefault();
       setCoords({ top: e.clientY - canvasOffset, left: e.clientX });
 
-      ideaPackage.setSelectedId(uuidv4());
+      setSelectedId(uuidv4());
       setTimeout(ideaModalShow, 300);
     },
-    [ideaModalShow, ideaPackage, canvasOffset]
+    [ideaModalShow, setSelectedId, canvasOffset]
   );
 
   const handleIdeaChange = useCallback(
@@ -143,16 +137,16 @@ const FreeFormIdeas = () => {
       ideaModalHide();
       if (idea.title === "") return;
       if (!idea.id) {
-        ideaPackage.ideasDispatch({
+        ideasDispatch({
           type: "create",
           id: selectedId,
           data: update(idea, { $merge: coords }),
         });
         return;
       }
-      ideaPackage.ideasDispatch({ type: "update", id: selectedId, data: idea });
+      ideasDispatch({ type: "update", id: selectedId, data: idea });
     },
-    [coords, selectedId, ideaPackage, ideaModalHide]
+    [coords, selectedId, ideasDispatch, ideaModalHide]
   );
 
   const domElementRef = useCallback(
@@ -164,7 +158,7 @@ const FreeFormIdeas = () => {
     [drop]
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     window.addEventListener("resize", updateCanvasOffset);
     return () => {
       window.removeEventListener("resize", updateCanvasOffset);
@@ -175,7 +169,7 @@ const FreeFormIdeas = () => {
     <div
       ref={domElementRef}
       className="FreeFormIdeas"
-      style={{ background: themePackage.theme.freeFormIdeasColor }}
+      style={{ background: theme.freeFormIdeasColor }}
       onDoubleClick={handleDoubleClick}
       onMouseUp={linkBreak}
       onMouseMove={adjustLinker}
@@ -189,8 +183,8 @@ const FreeFormIdeas = () => {
         <Idea
           key={key}
           onEdit={editIdea}
-          onSelect={ideaPackage.setSelectedId}
-          selected={idea.id === selectedIdea?.id}
+          onSelect={setSelectedId}
+          selected={idea.id === selectedId}
           onLinkStart={handleLinkStart}
           onLinkEnd={handleLinkEnd}
           {...idea}

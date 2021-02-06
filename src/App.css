@@ -16,7 +16,6 @@
 .Containment {
   display: flex;
   overflow: hidden;
-  position: absolute;
   flex-direction: row;
   background-color: red;
   min-height: 91vh;
