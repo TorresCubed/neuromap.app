@@ -8,8 +8,9 @@ import "./OptionBar.css";
 import { SketchPicker } from "react-color";
 
 const OptionBar = () => {
-  
-  const { ideas, selectedId, setSelectedId, ideasDispatch } = useContext(IdeaContext);
+  const { ideas, selectedId, setSelectedId, ideasDispatch } = useContext(
+    IdeaContext
+  );
   const selectedIdea = ideas[selectedId];
 
   const { theme, updateTheme } = useContext(ThemeContext);
@@ -20,19 +21,18 @@ const OptionBar = () => {
   const changeColor = useCallback(
     (color) => {
       setBackground(color.hex);
-      updateTheme({ 
-        element:{ 
-          1: "optionBarColor", 
-          2: "freeFormIdeasColor", 
-          3: "selectedIdeaColor" 
-        }
-        [colorSelectorValue],
+      updateTheme({
+        element: {
+          1: "optionBarColor",
+          2: "freeFormIdeasColor",
+          3: "selectedIdeaColor",
+        }[colorSelectorValue],
         color: color.hex,
       });
     },
     [colorSelectorValue, updateTheme]
   );
-  
+
   const handleThemeSelection = useCallback((event) => {
     setColorSelectorValue(event.target.value);
     if (event.target.value === "0") {
@@ -42,7 +42,6 @@ const OptionBar = () => {
     setShowColorPalet(true);
   }, []);
 
-  
   const [showIdeaChangeForm, setShowIdeaChangeForm] = useState(false);
   const toggleFormType = useCallback(() => {
     setShowIdeaChangeForm(!showIdeaChangeForm);
@@ -90,7 +89,9 @@ const OptionBar = () => {
           <option value="3">Selection Outline</option>
         </select>
       </div>
-      {showColorPalet && <SketchPicker onChange={changeColor} color={background}/>}
+      {showColorPalet && (
+        <SketchPicker onChange={changeColor} color={background} />
+      )}
     </div>
   );
 };

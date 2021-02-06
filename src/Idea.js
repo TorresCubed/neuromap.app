@@ -18,7 +18,6 @@ export const Idea = ({
   onLinkStart,
   onLinkEnd,
 }) => {
-
   const { theme } = useContext(ThemeContext);
 
   const { ideasDispatch } = useContext(IdeaContext);
