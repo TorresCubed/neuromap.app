@@ -18,13 +18,14 @@ export const Idea = ({
   onLinkStart,
   onLinkEnd,
 }) => {
-  const themePackage = useContext(ThemeContext);
 
-  const ideaPackage = useContext(IdeaContext);
+  const { theme } = useContext(ThemeContext);
+
+  const { ideasDispatch } = useContext(IdeaContext);
 
   const domElement = useRef();
   useLayoutEffect(() => {
-    ideaPackage.ideasDispatch({
+    ideasDispatch({
       type: "update",
       id,
       data: {
@@ -46,7 +47,7 @@ export const Idea = ({
     [drag]
   );
 
-  const select = useCallback(() => onSelect(id), [onSelect, id]);
+  const handleSelect = useCallback(() => onSelect(id), [onSelect, id]);
 
   const handleDoubleClick = useCallback(
     (e) => {
@@ -70,8 +71,8 @@ export const Idea = ({
 
   let selectedStyle = selected
     ? {
-        border: `2px solid ${themePackage.theme.selectedIdeaColor}`,
-        boxShadow: `4px 4px 15px ${themePackage.theme.selectedIdeaColor}`,
+        border: `2px solid ${theme.selectedIdeaColor}`,
+        boxShadow: `4px 4px 15px ${theme.selectedIdeaColor}`,
         zIndex: "2",
       }
     : {};
@@ -83,7 +84,7 @@ export const Idea = ({
       onDoubleClick={handleDoubleClick}
       className={"idea" + (selected ? " selected" : "")}
       onMouseUp={linkerDesignation}
-      onClick={select}
+      onClick={handleSelect}
     >
       <img
         className="linker"

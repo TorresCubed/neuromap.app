@@ -6,7 +6,7 @@ const Modal = ({ onClose, children }) => (
     <div>
       {children}
       <div className="closeButton" onClick={onClose}>
-        X
+        &times;
       </div>
     </div>
   </div>

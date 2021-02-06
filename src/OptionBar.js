@@ -8,53 +8,41 @@ import "./OptionBar.css";
 import { SketchPicker } from "react-color";
 
 const OptionBar = () => {
-  const ideaPackage = useContext(IdeaContext);
-  const selectedId = ideaPackage.selectedId;
-  const selectedIdea = ideaPackage.ideas[selectedId];
+  
+  const { ideas, selectedId, setSelectedId, ideasDispatch } = useContext(IdeaContext);
+  const selectedIdea = ideas[selectedId];
 
-  const themePackage = useContext(ThemeContext);
+  const { theme, updateTheme } = useContext(ThemeContext);
   const [colorSelectorValue, setColorSelectorValue] = useState(0);
   const [background, setBackground] = useState("#800080");
-  const [hiding, setHiding] = useState({ display: "none" });
+  const [showColorPalet, setShowColorPalet] = useState(false);
 
   const changeColor = useCallback(
     (color) => {
       setBackground(color.hex);
-      switch (colorSelectorValue) {
-        case "1":
-          themePackage.updateTheme({
-            element: "optionBarColor",
-            color: color.hex,
-          });
-          break;
-        case "2":
-          themePackage.updateTheme({
-            element: "freeFormIdeasColor",
-            color: color.hex,
-          });
-          break;
-        case "3":
-          themePackage.updateTheme({
-            element: "selectedIdeaColor",
-            color: color.hex,
-          });
-          break;
-        default:
-          return;
-      }
+      updateTheme({ 
+        element:{ 
+          1: "optionBarColor", 
+          2: "freeFormIdeasColor", 
+          3: "selectedIdeaColor" 
+        }
+        [colorSelectorValue],
+        color: color.hex,
+      });
     },
-    [colorSelectorValue, themePackage]
+    [colorSelectorValue, updateTheme]
   );
-
+  
   const handleThemeSelection = useCallback((event) => {
     setColorSelectorValue(event.target.value);
     if (event.target.value === "0") {
-      setHiding({ display: "none" });
+      setShowColorPalet(false);
       return;
     }
-    setHiding({ display: "flex" });
+    setShowColorPalet(true);
   }, []);
 
+  
   const [showIdeaChangeForm, setShowIdeaChangeForm] = useState(false);
   const toggleFormType = useCallback(() => {
     setShowIdeaChangeForm(!showIdeaChangeForm);
@@ -65,26 +53,23 @@ const OptionBar = () => {
       if (idea.title === "") return;
       if (!idea.id) {
         const newID = uuidv4();
-        ideaPackage.ideasDispatch({
+        ideasDispatch({
           type: "create",
           id: newID,
           data: update(idea, { $merge: { top: 100, left: 100 } }),
         });
-        ideaPackage.setSelectedId(newID);
+        setSelectedId(newID);
         setShowIdeaChangeForm(false);
         return;
       }
       toggleFormType();
-      ideaPackage.ideasDispatch({ type: "update", id: selectedId, data: idea });
+      ideasDispatch({ type: "update", id: selectedId, data: idea });
     },
-    [toggleFormType, selectedId, ideaPackage]
+    [toggleFormType, selectedId, ideasDispatch, setSelectedId]
   );
 
   return (
-    <div
-      className="OptionBar"
-      style={{ background: themePackage.theme.optionBarColor }}
-    >
+    <div className="OptionBar" style={{ background: theme.optionBarColor }}>
       <div className="selector">
         <button style={{ margin: "5px" }} onClick={toggleFormType}>
           Edit Selected Idea
@@ -105,9 +90,7 @@ const OptionBar = () => {
           <option value="3">Selection Outline</option>
         </select>
       </div>
-      <div style={hiding}>
-        <SketchPicker onChange={changeColor} color={background} />
-      </div>
+      {showColorPalet && <SketchPicker onChange={changeColor} color={background}/>}
     </div>
   );
 };

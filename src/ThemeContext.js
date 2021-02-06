@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import update from "immutability-helper";
 
-export const ThemeStateManagementProvider = () => {
+export const useThemeManager = () => {
   const [theme, setTheme] = useState({
     freeFormIdeasColor: "#008080",
     optionBarColor: "#800080",
