@@ -2,7 +2,6 @@ import React, { useReducer, useState } from "react";
 import update from "immutability-helper";
 
 export function useIdeaManager() {
-  
   const [selectedId, setSelectedId] = useState("a");
 
   const [ideas, ideasDispatch] = useReducer(
@@ -57,6 +56,6 @@ export function useIdeaManager() {
     selectedId: selectedId,
     setSelectedId: setSelectedId,
   };
-};
+}
 
 export const IdeaContext = React.createContext();

@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useState, useRef, useEffect } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
 import { IdeaContext } from "./IdeaContext";
 import { ThemeContext } from "./ThemeContext";
 import { useDrop } from "react-dnd";
@@ -50,12 +56,12 @@ export function calcCoords(idea, arrowRotation) {
 }
 
 const FreeFormIdeas = () => {
-  
   const { theme } = useContext(ThemeContext);
 
-  const { ideas, ideasDispatch, selectedId, setSelectedId } = useContext(IdeaContext);
+  const { ideas, ideasDispatch, selectedId, setSelectedId } = useContext(
+    IdeaContext
+  );
   const selectedIdea = ideas[selectedId];
-  
 
   const [coords, setCoords] = useState({ top: 0, left: 0 });
 
