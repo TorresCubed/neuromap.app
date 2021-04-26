@@ -13,7 +13,7 @@ name: CodeQL
 
 on:
   push:
-    branches: 
+    branches:
       - main
   pull_request:
     # The branches below must be a subset of the branches above
@@ -30,7 +30,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: 
+        language:
           - javascript
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
         # Learn more:
