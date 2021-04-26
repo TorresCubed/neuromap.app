@@ -1,44 +1,36 @@
-# This is a basic workflow to help you get started with Actions
+# This is a basic workflow that runs tests
 
 name: CI
 
 # Controls when the action will run.
 on:
+  push:
+    branches:
+    - main
+
   # Triggers the workflow on push or pull request events but only for the main branch
   pull_request:
-    branches: [ main ]
+    branches:
+    - main
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  prettier:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        # Make sure the actual branch is checked out when running on pull requests
-        ref: ${{ github.head_ref }}
-        # This is important to fetch the changes to the previous commit
-        fetch-depth: 0
-
-    - name: Prettify code
-      uses: creyD/prettier_action@v3.1
-      with:
-        prettier_options: "--write **/*"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Install modules
-      run: yarn
+
+    - name: Restoring Yarn cache
+      uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Installing packages
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
+      run: yarn install
+
     - name: Run tests
       run: yarn test
