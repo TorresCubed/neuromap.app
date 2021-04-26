@@ -43,7 +43,7 @@ jobs:
 
     - name: Running Prettier
       if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
-      run: yarn prettier --fix
+      run: yarn prettier --write .
 
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v4
