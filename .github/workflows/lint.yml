@@ -21,29 +21,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Restoring Yarn cache
+      - name: Restore Yarn cache
         id: yarn-cache
         uses: actions/cache@v2
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Installing packages
+      - name: Install Yarn packages
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install
 
-      - name: Running ESLint
+      - name: Run ESLint
         run: yarn eslint --fix
 
-      - name: Running stylelint
+      - name: Run stylelint
         run: yarn stylelint "**/*.{css,scss,sass}" --fix
 
-      - name: Running Prettier
+      - name: Run Prettier
         run: yarn prettier --write .
 
-      - name: Commiting changes
+      - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Apply formatting changes
