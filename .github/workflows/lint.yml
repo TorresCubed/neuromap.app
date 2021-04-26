@@ -6,12 +6,12 @@ name: Lint
 on:
   push:
     branches:
-    - main
+      - main
 
   # Triggers the workflow on push or pull request events but only for the main branch
   pull_request:
     branches:
-    - main
+      - main
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,31 +21,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Restoring Yarn cache
-      uses: actions/cache@v2
-      with:
-        path: '**/node_modules'
-        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Restoring Yarn cache
+        id: yarn-cache
+        uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-    - name: Installing packages
-      if: steps.yarn-cache.outputs.cache-hit != 'true'
-      run: yarn install
+      - name: Installing packages
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install
 
-    - name: Running ESLint
-      if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
-      run: yarn eslint --fix
+      - name: Running ESLint
+        run: yarn eslint --fix
 
-    - name: Running stylelint
-      if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
-      run: yarn stylelint "**/*.{css,scss,sass}" --fix
+      - name: Running stylelint
+        run: yarn stylelint "**/*.{css,scss,sass}" --fix
 
-    - name: Running Prettier
-      if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
-      run: yarn prettier --fix
+      - name: Running Prettier
+        run: yarn prettier --write .
 
-    - name: Commit changes
-      uses: stefanzweifel/git-auto-commit-action@v4
-      with:
-        commit_message: Apply formatting changes
+      - name: Commiting changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply formatting changes
