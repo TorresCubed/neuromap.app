@@ -32,7 +32,13 @@
     "extends": [
       "eslint:recommended",
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "prettier"
+    ]
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-prettier"
     ]
   },
   "browserslist": {
