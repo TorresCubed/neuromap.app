@@ -40,7 +40,6 @@ jobs:
       run: yarn stylelint "**/*.{css,scss,sass}" --fix
 
     - name: Running Prettier
-      if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
       run: yarn prettier --write .
 
     - name: Commit changes
