@@ -33,23 +33,17 @@ jobs:
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: yarn install
 
-    - name: Get file changes
-      id: get_file_changes
-      uses: trilom/file-changes-action@v1.2.4
-      with:
-        output: ' '
-
     - name: Running ESLint
       if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
-      run: yarn eslint --config ./.eslintrc.js --ignore-path ./.eslintignore ${{ steps.get_file_changes.outputs.files_added }} ${{ steps.get_file_changes.outputs.files_modified }} --fix
+      run: yarn eslint --fix
 
     - name: Running stylelint
       if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
-      run: yarn stylelint --config ./.stylelintrc  --ignore-path ./.stylelintignore --allow-empty-input ${{ steps.get_file_changes.outputs.files_added }} ${{ steps.get_file_changes.outputs.files_modified }} --fix
+      run: yarn stylelint "**/*.{css,scss,sass}" --fix
 
     - name: Running Prettier
       if: ${{ always() && (steps.get_file_changes.outputs.files_added || steps.get_file_changes.outputs.files_modified) }}
-      run: yarn prettier --config ./prettier.config.js --ignore-path ./.prettierignore  ${{ steps.get_file_changes.outputs.files_added }} ${{ steps.get_file_changes.outputs.files_modified }} --fix
+      run: yarn prettier --fix
 
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v4
