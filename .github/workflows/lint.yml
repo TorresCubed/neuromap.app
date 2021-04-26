@@ -24,6 +24,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Restoring Yarn cache
+        id: yarn-cache
         uses: actions/cache@v2
         with:
           path: "**/node_modules"
