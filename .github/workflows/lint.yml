@@ -1,6 +1,6 @@
-# This is a basic workflow that runs tests
+# This is a basic workflow that runs various linters and formatters
 
-name: CI
+name: Lint
 
 # Controls when the action will run.
 on:
@@ -17,8 +17,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
 
@@ -33,5 +34,16 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install
 
-      - name: Running tests
-        run: yarn test
+      - name: Running ESLint
+        run: yarn eslint --fix
+
+      - name: Running stylelint
+        run: yarn stylelint "**/*.{css,scss,sass}" --fix
+
+      - name: Running Prettier
+        run: yarn prettier --write .
+
+      - name: Commiting changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply formatting changes
