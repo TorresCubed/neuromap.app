@@ -10,6 +10,8 @@
 
 # production
 /build
+.Tomcat
+.mysql
 
 # misc
 .DS_Store
