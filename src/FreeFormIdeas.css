@@ -1,0 +1,11 @@
+.FreeFormIdeas {
+  top: inherit;
+  order: 1;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.linkingArrow .line {
+  z-index: 3;
+}

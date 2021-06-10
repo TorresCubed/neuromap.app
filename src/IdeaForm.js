@@ -5,15 +5,21 @@ import "./IdeaForm.css";
 const IdeaForm = ({ onSubmit, idea }) => {
   const [ideaState, setIdeaState] = useState(idea || { title: "" });
 
+  if (ideaState.id !== idea?.id) {
+    setIdeaState(idea || { title: "" });
+  }
+
   const handleChange = useCallback(
     (event) =>
       setIdeaState(update(ideaState, { title: { $set: event.target.value } })),
     [ideaState]
   );
+
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
       onSubmit(ideaState);
+      setIdeaState({ title: "" });
     },
     [onSubmit, ideaState]
   );
@@ -25,8 +31,8 @@ const IdeaForm = ({ onSubmit, idea }) => {
       button: "Add",
     },
     editForm: {
-      header: "Would you like to change your Idea?",
-      label: "New Idea:",
+      header: "Enter Idea Change",
+      label: "Change Idea:",
       button: "Change",
     },
   };
@@ -41,7 +47,7 @@ const IdeaForm = ({ onSubmit, idea }) => {
           <label>{entries[formType].label}</label>
         </div>
         <div>
-          <input type="text" value={ideaState.title} onChange={handleChange} />
+          <textarea value={ideaState.title} onChange={handleChange} />
         </div>
         <div>
           <input

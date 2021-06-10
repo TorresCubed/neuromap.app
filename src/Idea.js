@@ -1,7 +1,9 @@
-import React, { useCallback, useLayoutEffect, useState } from "react";
+import React, { useCallback, useLayoutEffect, useContext, useRef } from "react";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import linker from "./linkerIcon.JPG";
+import { IdeaContext } from "./IdeaContext";
+import { ThemeContext } from "./ThemeContext";
 import "./Idea.css";
 
 export const Idea = ({
@@ -15,17 +17,19 @@ export const Idea = ({
   onSelect,
   onLinkStart,
   onLinkEnd,
-  ideasDispatch,
 }) => {
-  const [domElement, setDomElement] = useState();
+  const { theme } = useContext(ThemeContext);
 
+  const { ideasDispatch } = useContext(IdeaContext);
+
+  const domElement = useRef();
   useLayoutEffect(() => {
     ideasDispatch({
       type: "update",
       id,
       data: {
-        width: domElement?.offsetWidth,
-        height: domElement?.offsetHeight,
+        width: domElement.current?.offsetWidth,
+        height: domElement.current?.offsetHeight,
       },
     });
   });
@@ -36,13 +40,13 @@ export const Idea = ({
 
   const domElementRef = useCallback(
     (domElementReference) => {
-      setDomElement(domElementReference);
+      domElement.current = domElementReference;
       drag(domElementReference);
     },
     [drag]
   );
 
-  const select = useCallback(() => onSelect(id), [onSelect, id]);
+  const handleSelect = useCallback(() => onSelect(id), [onSelect, id]);
 
   const handleDoubleClick = useCallback(
     (e) => {
@@ -64,17 +68,22 @@ export const Idea = ({
     onLinkEnd(id);
   }, [onLinkEnd, id]);
 
-  // if (isDragging) {
-  //   return <div ref={drag} />;
-  // }
+  let selectedStyle = selected
+    ? {
+        border: `2px solid ${theme.selectedIdeaColor}`,
+        boxShadow: `4px 4px 15px ${theme.selectedIdeaColor}`,
+        zIndex: "2",
+      }
+    : {};
+
   return (
     <div
       ref={domElementRef}
-      style={{ left, top }}
+      style={{ left, top, ...selectedStyle }}
       onDoubleClick={handleDoubleClick}
       className={"idea" + (selected ? " selected" : "")}
-      onClick={select}
       onMouseUp={linkerDesignation}
+      onClick={handleSelect}
     >
       <img
         className="linker"

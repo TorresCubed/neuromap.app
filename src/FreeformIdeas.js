@@ -1,14 +1,21 @@
-import React, { useCallback, useReducer, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
+import { IdeaContext } from "./IdeaContext";
+import { ThemeContext } from "./ThemeContext";
 import { useDrop } from "react-dnd";
 import { Idea } from "./Idea";
 import { ItemTypes } from "./ItemTypes";
-import update from "immutability-helper";
 import { v4 as uuidv4 } from "uuid";
 import Modal from "./Modal";
 import IdeaForm from "./IdeaForm";
+import update from "immutability-helper";
 import Arrow from "./Arrow";
-
-const heightAdjustment = 65;
+import "./FreeFormIdeas.css";
 
 /**
  * Calculates the coordinates of the end of arrow, pointing to the idea
@@ -49,51 +56,12 @@ export function calcCoords(idea, arrowRotation) {
 }
 
 const FreeFormIdeas = () => {
-  const [ideas, ideasDispatch] = useReducer(
-    (state, action) => {
-      switch (action.type) {
-        case "update":
-          return update(state, {
-            [action.id]: {
-              $merge: action.data,
-            },
-          });
-        case "create":
-          return update(state, {
-            [action.id]: {
-              $set: Object.assign(
-                { id: action.id, linkList: new Set() },
-                action.data
-              ),
-            },
-          });
-        case "link":
-          return update(state, {
-            [action.fromId]: {
-              linkList: { $add: [action.toId] },
-            },
-          });
-        default:
-          throw new Error(`Unexpected action type: ${action.type}`);
-      }
-    },
-    {
-      a: {
-        id: "a",
-        top: 20,
-        left: 80,
-        title: "Here is an Example to get you Started",
-        linkList: new Set("b"),
-      },
-      b: {
-        id: "b",
-        top: 180,
-        left: 20,
-        title: "Great Idea!",
-        linkList: new Set(),
-      },
-    }
+  const { theme } = useContext(ThemeContext);
+
+  const { ideas, ideasDispatch, selectedId, setSelectedId } = useContext(
+    IdeaContext
   );
+  const selectedIdea = ideas[selectedId];
 
   const [coords, setCoords] = useState({ top: 0, left: 0 });
 
@@ -101,24 +69,30 @@ const FreeFormIdeas = () => {
   const ideaModalShow = useCallback(() => setShowIdeaModal(true), []);
   const ideaModalHide = useCallback(() => setShowIdeaModal(false), []);
 
-  const [selectedId, setSelectedId] = useState("a");
-  const selectedIdea = ideas[selectedId];
-
   const [linkerEnd, setLinkerEnd] = useState();
   const [linkingState, setLinkingState] = useState(false);
   const linkBreak = useCallback(() => setLinkingState(false), []);
 
-  const handleLinkStart = useCallback((e) => {
-    setLinkerEnd([e.clientY - heightAdjustment, e.clientX]);
-    setLinkingState(true);
-  }, []);
+  const domElement = useRef();
+  const [canvasOffset, setcanvasOffset] = useState(60);
+  const updateCanvasOffset = () => {
+    setcanvasOffset(domElement.current.getBoundingClientRect().y);
+  };
+
+  const handleLinkStart = useCallback(
+    (e) => {
+      setLinkerEnd([e.clientY - canvasOffset, e.clientX]);
+      setLinkingState(true);
+    },
+    [canvasOffset]
+  );
 
   const adjustLinker = useCallback(
     (e) => {
       if (!linkingState) return;
-      setLinkerEnd([e.clientY - heightAdjustment, e.clientX]);
+      setLinkerEnd([e.clientY - canvasOffset, e.clientX]);
     },
-    [linkingState]
+    [linkingState, canvasOffset]
   );
 
   const handleLinkEnd = useCallback(
@@ -127,7 +101,7 @@ const FreeFormIdeas = () => {
       if (id === selectedId || !linkingState) return;
       ideasDispatch({ type: "link", fromId: selectedId, toId: id });
     },
-    [selectedId, linkingState]
+    [selectedId, linkingState, ideasDispatch]
   );
 
   const [, drop] = useDrop({
@@ -136,7 +110,11 @@ const FreeFormIdeas = () => {
       const delta = monitor.getDifferenceFromInitialOffset();
       const left = Math.round(item.left + delta.x);
       const top = Math.round(item.top + delta.y);
-      ideasDispatch({ type: "update", id: item.id, data: { left, top } });
+      ideasDispatch({
+        type: "update",
+        id: item.id,
+        data: { left, top },
+      });
     },
   });
 
@@ -145,27 +123,25 @@ const FreeFormIdeas = () => {
       setSelectedId(id);
       ideaModalShow(true);
     },
-    [setSelectedId, ideaModalShow]
+    [ideaModalShow, setSelectedId]
   );
 
   const handleDoubleClick = useCallback(
     (e) => {
-      if (e.target.className !== "FreeformMap") return;
+      if (e.target.className !== "FreeFormIdeas") return;
       e.preventDefault();
-      setCoords({
-        top: e.nativeEvent.layerY,
-        left: e.nativeEvent.layerX,
-      });
+      setCoords({ top: e.clientY - canvasOffset, left: e.clientX });
+
       setSelectedId(uuidv4());
       setTimeout(ideaModalShow, 300);
     },
-    [ideaModalShow]
+    [ideaModalShow, setSelectedId, canvasOffset]
   );
 
   const handleIdeaChange = useCallback(
     (idea) => {
+      ideaModalHide();
       if (idea.title === "") return;
-      setShowIdeaModal(false);
       if (!idea.id) {
         ideasDispatch({
           type: "create",
@@ -176,12 +152,30 @@ const FreeFormIdeas = () => {
       }
       ideasDispatch({ type: "update", id: selectedId, data: idea });
     },
-    [coords, selectedId]
+    [coords, selectedId, ideasDispatch, ideaModalHide]
   );
+
+  const domElementRef = useCallback(
+    (domElementReference) => {
+      domElement.current = domElementReference;
+      updateCanvasOffset();
+      drop(domElementReference);
+    },
+    [drop]
+  );
+
+  useEffect(() => {
+    window.addEventListener("resize", updateCanvasOffset);
+    return () => {
+      window.removeEventListener("resize", updateCanvasOffset);
+    };
+  }, []);
+
   return (
     <div
-      className="FreeformMap"
-      ref={drop}
+      ref={domElementRef}
+      className="FreeFormIdeas"
+      style={{ background: theme.freeFormIdeasColor }}
       onDoubleClick={handleDoubleClick}
       onMouseUp={linkBreak}
       onMouseMove={adjustLinker}
@@ -196,10 +190,9 @@ const FreeFormIdeas = () => {
           key={key}
           onEdit={editIdea}
           onSelect={setSelectedId}
-          selected={idea.id === selectedIdea?.id}
+          selected={idea.id === selectedId}
           onLinkStart={handleLinkStart}
           onLinkEnd={handleLinkEnd}
-          ideasDispatch={ideasDispatch}
           {...idea}
         />
       ))}
@@ -225,7 +218,12 @@ const FreeFormIdeas = () => {
         );
       })}
       {linkingState && (
-        <Arrow start={[selectedIdea.top, selectedIdea.left]} end={linkerEnd} />
+        <div className="linkingArrow">
+          <Arrow
+            start={[selectedIdea.top, selectedIdea.left]}
+            end={linkerEnd}
+          />
+        </div>
       )}
     </div>
   );
