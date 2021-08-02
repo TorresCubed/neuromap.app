@@ -1,0 +1,31 @@
+.OptionBar {
+  order: 2;
+  min-width: 230px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.OptionBar .form {
+  border: 1px solid black;
+  height: 200px;
+}
+
+.OptionBar > div {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 95%;
+  margin-top: 2px;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.OptionBar .selector {
+  border: 1px solid black;
+  font-size: 15px;
+  background-color: snow;
+  border-radius: 5px;
+}

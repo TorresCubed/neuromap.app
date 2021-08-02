@@ -11,7 +11,7 @@
   left: 0;
   margin: auto;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 2;
+  z-index: 5;
 }
 
 .modal.hidden {
@@ -19,9 +19,20 @@
 }
 
 .modal > div {
+  position: relative;
   width: 250px;
   height: 230px;
   border-radius: 20px;
   background: white;
   border: black;
+}
+
+.modal .closeButton {
+  cursor: pointer;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 15px;
+  height: 15px;
+  font-weight: bold;
 }

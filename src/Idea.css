@@ -18,8 +18,3 @@
   padding: 0.5rem 1rem;
   cursor: move;
 }
-
-.idea.selected {
-  border: 2px solid gold;
-  box-shadow: 4px 4px 8px darkkhaki;
-}
