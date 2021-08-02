@@ -1,32 +1,36 @@
 # Neuromap.app
 
 ## Design
-* This project utilizes React.js Hooks and Reducers to provide a seemless canvas for "Idea" manipulation.
-* The API is produced in Java using Spring Boot to interface with a MySQL Database.
-* The project tasks were established on a Kanban board.
-* Utilizing Pull Requests and code review promoted clean code and best practices.
-* Uses responsive CSS for layout, as well as personal customization
 
-## Why is the project built this way 
-* While designing this project with the guidance of a Senior Software Engineer, we decided to utilize Reacts `useState` to provide state handling.
-* This was later upgraded with `useReducer` as the next step in state management.
-* With Java being my most established language, Spring Boot was the final decision for producing my API.
-* MySQL was chosen as the database because it was the version I had the most experience with.
-* Much of the project was produced step by step as a way for my mentor to introduce concepts and design choices.
+- This project utilizes React.js Hooks and Reducers to provide a seemless canvas for "Idea" manipulation.
+- The API is produced in Java using Spring Boot to interface with a MySQL Database.
+- The project tasks were established on a Kanban board.
+- Utilizing Pull Requests and code review promoted clean code and best practices.
+- Uses responsive CSS for layout, as well as personal customization
+
+## Why is the project built this way
+
+- While designing this project with the guidance of a Senior Software Engineer, we decided to utilize Reacts `useState` to provide state handling.
+- This was later upgraded with `useReducer` as the next step in state management.
+- With Java being my most established language, Spring Boot was the final decision for producing my API.
+- MySQL was chosen as the database because it was the version I had the most experience with.
+- Much of the project was produced step by step as a way for my mentor to introduce concepts and design choices.
 
 ## Next Steps
-* The current goal is to begin transitioning portions of the project for utilization of AWS services.
-* Provide CSS that allows for improved usage on phones/tablets
-* Produce Peer to Peer collaboration for a Map.
-* Implement users and varying Map instances between different users. 
-* Add brainstorming templates such as lists and trees.
+
+- The current goal is to begin transitioning portions of the project for utilization of AWS services.
+- Provide CSS that allows for improved usage on phones/tablets
+- Produce Peer to Peer collaboration for a Map.
+- Implement users and varying Map instances between different users.
+- Add brainstorming templates such as lists and trees.
 
 ### Example of linking ideas
+
 ![neuroMap1](https://user-images.githubusercontent.com/72966211/127804891-dfc2ccbb-91de-42d9-a2fa-42751de06e1b.JPG)
 
 ### Personalization of CSS as well as dynamic idea placement
-![neuroMap2](https://user-images.githubusercontent.com/72966211/127804848-94edd199-06d3-4bf8-b033-46309239368c.JPG)
 
+![neuroMap2](https://user-images.githubusercontent.com/72966211/127804848-94edd199-06d3-4bf8-b033-46309239368c.JPG)
 
 ## Available Scripts
 
